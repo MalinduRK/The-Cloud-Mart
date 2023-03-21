@@ -4,10 +4,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 using Siccity.GLTFUtility;
-using static UnityEditor.PlayerSettings;
-using static UnityEditor.VersionControl.Message;
-using Unity.VisualScripting;
-using UnityEditor.SearchService;
 
 public class ModelLoader : MonoBehaviour
 {
@@ -22,7 +18,9 @@ public class ModelLoader : MonoBehaviour
             name = "Model"
         };
 
-        DownloadFile("https://firebasestorage.googleapis.com/v0/b/the-cloud-mart.appspot.com/o/poly.glb");
+        // %2F is used in between the folder name and filename in firebase request urls, instead of a /
+
+        DownloadFile("https://firebasestorage.googleapis.com/v0/b/the-cloud-mart.appspot.com/o/armchair.glb");
     }
     public void DownloadFile(string url)
     {
