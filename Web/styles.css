@@ -88,7 +88,7 @@ body{
     font-size: 16px;
 }
 
-.alert{
+#alert{
     width: 100%;
     background: rgb(0, 255, 106);
     padding: 10px 20px;
