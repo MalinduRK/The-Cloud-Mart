@@ -1,3 +1,27 @@
+// Open model fields only if the checkbox is checked
+const modelCheckbox = document.getElementById('model-check');
+var modelBox = document.getElementById("model-box");
+
+modelCheckbox.addEventListener('change', function() {
+    if (this.checked) {
+        modelBox.style.display = "block";
+    } else {
+        modelBox.style.display = "none";
+    }
+});
+
+// Open image field only if the checkbox is checked
+const imageCheckbox = document.getElementById('image-check');
+var addImageButton = document.getElementById("add-image-button");
+
+imageCheckbox.addEventListener('change', function() {
+    if (this.checked) {
+        addImageButton.style.display = "block";
+    } else {
+        addImageButton.style.display = "none";
+    }
+});
+
 // Initialize Firebase
 var firebaseConfig = {
     apiKey: "AIzaSyBIYvM5ZsdY5C-xH8qIIRDruHs3aPGMW54",
@@ -17,41 +41,79 @@ var db = firebase.firestore();
 
 const storage = firebase.storage().ref();
 
+var form = document.getElementById("item-form");
+
 // Get references to the form input fields
 var itemName = document.getElementById("item-name");
 var itemPrice = document.getElementById("item-price");
 var itemDescription = document.getElementById("item-description");
 
+var itemLength = document.getElementById("item-length");
+var itemWidth = document.getElementById("item-width");
+var itemHeight = document.getElementById("item-height");
+
 // Handle form submission
-var form = document.getElementById("item-form");
 form.addEventListener("submit", async function(event) {
     event.preventDefault(); // prevent the form from submitting normally
+
+    console.log("Adding item to firebase...");
 
     // Get the values from the input fields
     var name = itemName.value;
     var price = parseFloat(itemPrice.value);
     var description = itemDescription.value;
-    const file = form.elements.image.files[0];
+    const imageFile = form.elements.image.files[0];
+    // Model values
+    var modelCheck = modelCheckbox.checked;
+    var length = null;
+    var width = null;
+    var height = null;
+    var modelFile = null;
+    var modelUrl = null;
+    
+    var imageUrl = null;
+    // Upload image only if the checkbox is checked
+    if (imageCheckbox.checked) {
+        console.log('Uploading image');
+        // Upload the image file to Firebase Storage
+        const storageRef = firebase.storage().ref().child("item-images/" + imageFile.name);
+        const snapshot = await storageRef.put(imageFile);
+        // Get the download URL for the image file
+        imageUrl = await snapshot.ref.getDownloadURL();
+    }
 
-    // Upload the file to Firebase Storage
-    const storageRef = firebase.storage().ref().child("item-images/" + file.name);
-    const snapshot = await storageRef.put(file);
+    // Get model values only if the checkbox is checked
+    if (modelCheck) {
+        console.log('Uploading model');
+        length = parseFloat(itemLength.value);
+        width = parseFloat(itemWidth.value);
+        height = parseFloat(itemHeight.value);
+        modelFile = form.elements.model.files[0];
 
-    // Get the download URL for the file
-    const imageUrl = await snapshot.ref.getDownloadURL();
+        // Upload the model file to Firebase Storage
+        const storageRef_model = firebase.storage().ref().child("item-models/" + modelFile.name);
+        const snapshot_model = await storageRef_model.put(modelFile);
+        // Get the download URL for the model file
+        modelUrl = await snapshot_model.ref.getDownloadURL();
+    }
 
     // Create a new document in the "items" collection with the item data
     db.collection("items").add({
-        name: name,
-        description: description,
-        price: price,
-        imageUrl: imageUrl
+        itemName: name,
+        itemDescription: description,
+        itemPrice: price,
+        sellerName: "sellerbot",
+        imageUrl: imageUrl,
+        modelAdded: modelCheck,
+        itemLength: length,
+        itemWidth: width,
+        itemHeight: height,
+        modelUrl: modelUrl
     })
     .then(function(docRef) {
         console.log("Item added with ID: ", docRef.id);
         alert("Successfully added item!");
-        // Reset the form
-        form.reset();
+        location.reload();
     })
     .catch(function(error) {
         console.error("Error adding item: ", error);
