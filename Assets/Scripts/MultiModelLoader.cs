@@ -18,7 +18,8 @@ public class MultiModelLoader : MonoBehaviour
         {
             name = "Models"
         };
-
+        StartCoroutine(
+                GetDocuments());
         DownloadFiles("https://firebasestorage.googleapis.com/v0/b/the-cloud-mart.appspot.com/o/?prefix=models/");
     }
 
@@ -117,4 +118,28 @@ public class MultiModelLoader : MonoBehaviour
         string filename = pieces[^1];
         return $"{Application.persistentDataPath}/Files/{filename}";
     }
+
+    IEnumerator GetDocuments()
+    {
+        string projectId = "the-cloud-mart";
+        string databaseId = "(default)";
+        string collectionId = "items";
+        string url = $"https://firestore.googleapis.com/v1/projects/{projectId}/databases/{databaseId}/documents/{collectionId}?pageSize=4&orderBy=field.modelAdded&q=field.modelAdded=true";
+
+        UnityWebRequest request = UnityWebRequest.Get(url);
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            // Parse the response JSON to get the documents
+            string responseJson = request.downloadHandler.text;
+            // Process the response as needed
+            Debug.Log(responseJson);
+        }
+        else
+        {
+            Debug.Log($"Request failed with status code {request.responseCode}: {request.error}");
+        }
+    }
+
 }

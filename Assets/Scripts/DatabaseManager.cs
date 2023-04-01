@@ -34,7 +34,7 @@ public class DatabaseManager : MonoBehaviour
     IEnumerator retrieveFromDatabase()
     {
         // Construct the URL for the Firestore document
-        string url = $"https://firestore.googleapis.com/v1/projects/the-cloud-mart/databases/(default)/documents/items/item0001?key=MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC7KFInf0JYb+/Q";
+        string url = $"https://firestore.googleapis.com/v1/projects/the-cloud-mart/databases/(default)/documents/items/";
 
         using (UnityWebRequest www = UnityWebRequest.Get(url))
         {
