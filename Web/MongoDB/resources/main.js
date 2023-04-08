@@ -93,10 +93,9 @@ form.addEventListener("submit", async function(event) {
     }
 
     // Create a new document in the "items" collection with the item data
-    /*
     $.ajax({
         type: "POST",
-        url: "http://localhost:3000/items",
+        url: "api/items",
         data: JSON.stringify({ "itemName": itemName, "itemPrice": itemPrice, "itemDescription" : itemDescription }),
         contentType: "application/json",
         success: function (result) {
@@ -105,5 +104,5 @@ form.addEventListener("submit", async function(event) {
         error: function (result, status) {
             console.log(result);
         }
-    });*/
+    });
 });

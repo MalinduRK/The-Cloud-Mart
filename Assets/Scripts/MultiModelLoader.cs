@@ -1,145 +1,93 @@
-using System;
-using System.IO;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
+using System.Collections;
+using System.IO;
 using Siccity.GLTFUtility;
+using Newtonsoft.Json;
+
+[System.Serializable]
+public class Item
+{
+    public string name;
+    public string bucket;
+}
+
+[System.Serializable]
+public class ItemList
+{
+    public string[] prefixes;
+    public Item[] items;
+}
 
 public class MultiModelLoader : MonoBehaviour
 {
-    GameObject wrapper;
-    string filePath;
-    float distanceBetweenObjects = 2f; // set the distance between objects here
+    public string storageUrl = "https://firebasestorage.googleapis.com/v0/b/the-cloud-mart.appspot.com/o/";
+    public string bucketPath = "models/";
+    public string fileType = ".glb";
+    public string apiKey = "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC7KFInf0JYb+/Q";
+    public string localPath = "Assets/Models/";
 
-    private void Start()
+    IEnumerator Start()
     {
-        filePath = $"{Application.persistentDataPath}/Files/";
-        wrapper = new GameObject
-        {
-            name = "Models"
-        };
-        StartCoroutine(
-                GetDocuments());
-        DownloadFiles("https://firebasestorage.googleapis.com/v0/b/the-cloud-mart.appspot.com/o/?prefix=models/");
-    }
+        // Load all files from Firebase Storage with .glb extension
+        UnityWebRequest www = UnityWebRequest.Get(storageUrl + "?prefix=" + bucketPath);
+        yield return www.SendWebRequest();
 
-    public void DownloadFiles(string url)
-    {
-        StartCoroutine(GetFilesRequest(url, (UnityWebRequest req) =>
+        if (www.result != UnityWebRequest.Result.Success)
         {
-            if (req.result == UnityWebRequest.Result.ConnectionError || req.result == UnityWebRequest.Result.ProtocolError)
+            Debug.Log(www.error);
+            yield break;
+        }
+
+        // Parse response and download each file to local storage
+        string response = www.downloadHandler.text;
+
+        // Using newtonsoft json parser, we can easily read the json data
+        ItemList itemList = JsonConvert.DeserializeObject<ItemList>(response);
+
+        foreach (var item in itemList.items)
+        {
+            Debug.Log(item.name);
+            Debug.Log(item.bucket);
+
+            string[] fileNames = item.name.Split('/');
+
+            foreach (string fileName in fileNames)
             {
-                // Log any errors that may happen
-                Debug.Log($"{req.error} : {req.downloadHandler.text}");
-            }
-            else
-            {
-                // Split the response into individual file URLs
-                string[] fileUrls = req.downloadHandler.text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-                Debug.Log(req.downloadHandler.text);
-                foreach (string fileUrl in fileUrls)
+                if (fileName.EndsWith(fileType))
                 {
-                    Debug.Log(fileUrl);
-                    if (fileUrl.EndsWith(".glb\","))
-                    {
-                        // Remove the prefix and suffix from the file URL
-                        string fileName = Path.GetFileName(fileUrl);
-                        Debug.Log($"Downloading file {fileName}");
-                        string downloadUrl = fileUrl + "?alt=media";
-
-                        Debug.Log(downloadUrl);
-
-                        // Download the file and create a new object
-                        DownloadFile(downloadUrl, fileName);
-                    }
+                    Debug.Log("Saving file " + fileName);
+                    StartCoroutine(DownloadAndSaveFile(fileName));
                 }
             }
-        }));
-    }
-
-    public void DownloadFile(string url, string fileName)
-    {
-        string path = $"{filePath}{fileName}";
-        if (File.Exists(path))
-        {
-            Debug.Log($"Found {fileName} locally, loading...");
-            CreateModel(path);
-            return;
-        }
-
-        StartCoroutine(GetFileRequest(url, (UnityWebRequest req) =>
-        {
-            if (req.result == UnityWebRequest.Result.ConnectionError || req.result == UnityWebRequest.Result.ProtocolError)
-            {
-                // Log any errors that may happen
-                Debug.Log($"{req.error} : {req.downloadHandler.text}");
-            }
-            else
-            {
-                // Save the model into a new wrapper
-                CreateModel(path);
-            }
-        }));
-    }
-
-    void CreateModel(string path)
-    {
-        // Import the GLB file and create a new object
-        GameObject model = Importer.LoadFromFile(path);
-        model.name = Path.GetFileNameWithoutExtension(path);
-
-        // Set the position of the new object based on the number of objects already created
-        int numObjects = wrapper.transform.childCount;
-        Vector3 position = new Vector3(numObjects * distanceBetweenObjects, 0f, 0f);
-        model.transform.position = position;
-
-        // Set the parent of the new object to the wrapper object
-        model.transform.SetParent(wrapper.transform);
-    }
-
-    IEnumerator GetFilesRequest(string url, Action<UnityWebRequest> callback)
-    {
-        using UnityWebRequest req = UnityWebRequest.Get(url);
-        yield return req.SendWebRequest();
-        callback(req);
-    }
-
-    IEnumerator GetFileRequest(string url, Action<UnityWebRequest> callback)
-    {
-        using UnityWebRequest req = UnityWebRequest.Get(url);
-        req.downloadHandler = new DownloadHandlerFile(GetFilePath(url));
-        yield return req.SendWebRequest();
-        callback(req);
-    }
-
-    string GetFilePath(string url)
-    {
-        string[] pieces = url.Split('/');
-        string filename = pieces[^1];
-        return $"{Application.persistentDataPath}/Files/{filename}";
-    }
-
-    IEnumerator GetDocuments()
-    {
-        string projectId = "the-cloud-mart";
-        string databaseId = "(default)";
-        string collectionId = "items";
-        string url = $"https://firestore.googleapis.com/v1/projects/{projectId}/databases/{databaseId}/documents/{collectionId}?pageSize=4&orderBy=field.modelAdded&q=field.modelAdded=true";
-
-        UnityWebRequest request = UnityWebRequest.Get(url);
-        yield return request.SendWebRequest();
-
-        if (request.result == UnityWebRequest.Result.Success)
-        {
-            // Parse the response JSON to get the documents
-            string responseJson = request.downloadHandler.text;
-            // Process the response as needed
-            Debug.Log(responseJson);
-        }
-        else
-        {
-            Debug.Log($"Request failed with status code {request.responseCode}: {request.error}");
         }
     }
 
+    IEnumerator DownloadAndSaveFile(string fileName)
+    {
+        // Download the file from Firebase Storage and save it to local storage
+        UnityWebRequest www = UnityWebRequest.Get(storageUrl + "models%2F" + fileName + "?alt=media");
+        www.downloadHandler = new DownloadHandlerFile(localPath + fileName);
+        yield return www.SendWebRequest();
+
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.error);
+            yield break;
+        }
+
+        Debug.Log("File " + fileName + " downloaded and saved to " + localPath);
+
+        // Load the GLTF file using the GLTFUtility library
+        GameObject gltfObject = Importer.LoadFromFile(localPath + fileName);
+
+        // Set the object's name to the file name (without extension)
+        gltfObject.name = Path.GetFileNameWithoutExtension(fileName);
+
+        // Position the object in the scene as desired
+        gltfObject.transform.position = Vector3.zero;
+
+        // Rotate the object as desired
+        gltfObject.transform.rotation = Quaternion.identity;
+    }
 }

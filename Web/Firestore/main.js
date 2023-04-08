@@ -76,7 +76,7 @@ form.addEventListener("submit", async function(event) {
     if (imageCheckbox.checked) {
         console.log('Uploading image');
         // Upload the image file to Firebase Storage
-        const storageRef = firebase.storage().ref().child("item-images/" + imageFile.name);
+        const storageRef = firebase.storage().ref().child("images/" + imageFile.name);
         const snapshot = await storageRef.put(imageFile);
         // Get the download URL for the image file
         imageUrl = await snapshot.ref.getDownloadURL();
@@ -91,7 +91,7 @@ form.addEventListener("submit", async function(event) {
         modelFile = form.elements.model.files[0];
 
         // Upload the model file to Firebase Storage
-        const storageRef_model = firebase.storage().ref().child("item-models/" + modelFile.name);
+        const storageRef_model = firebase.storage().ref().child("models/" + modelFile.name);
         const snapshot_model = await storageRef_model.put(modelFile);
         // Get the download URL for the model file
         modelUrl = await snapshot_model.ref.getDownloadURL();
