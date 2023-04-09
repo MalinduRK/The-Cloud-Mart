@@ -26,6 +26,8 @@ public class MultiModelLoader : MonoBehaviour
     public string fileType = ".glb";
     public string apiKey = "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC7KFInf0JYb+/Q";
     public string localPath = "Assets/Models/";
+    // Create a parent object to hold all the downloaded objects
+    public GameObject parentObject;
 
     IEnumerator Start()
     {
@@ -45,10 +47,13 @@ public class MultiModelLoader : MonoBehaviour
         // Using newtonsoft json parser, we can easily read the json data
         ItemList itemList = JsonConvert.DeserializeObject<ItemList>(response);
 
+        // Set initial position for the first game object
+        Vector3 position = parentObject.transform.position;
+
         foreach (var item in itemList.items)
         {
-            Debug.Log(item.name);
-            Debug.Log(item.bucket);
+            //Debug.Log(item.name);
+            //Debug.Log(item.bucket);
 
             string[] fileNames = item.name.Split('/');
 
@@ -56,27 +61,39 @@ public class MultiModelLoader : MonoBehaviour
             {
                 if (fileName.EndsWith(fileType))
                 {
-                    Debug.Log("Saving file " + fileName);
-                    StartCoroutine(DownloadAndSaveFile(fileName));
+                    StartCoroutine(DownloadAndSaveFile(fileName, position));
+
+                    // Update the position for the next game object
+                    position += new Vector3(0, 0, 3);
                 }
             }
         }
     }
 
-    IEnumerator DownloadAndSaveFile(string fileName)
+    IEnumerator DownloadAndSaveFile(string fileName, Vector3 position)
     {
-        // Download the file from Firebase Storage and save it to local storage
-        UnityWebRequest www = UnityWebRequest.Get(storageUrl + "models%2F" + fileName + "?alt=media");
-        www.downloadHandler = new DownloadHandlerFile(localPath + fileName);
-        yield return www.SendWebRequest();
+        string filePath = localPath + fileName;
 
-        if (www.result != UnityWebRequest.Result.Success)
+        // Check if the file already exists
+        if (File.Exists(filePath))
         {
-            Debug.Log(www.error);
-            yield break;
+            Debug.Log("File " + fileName + " already exists in " + localPath);
         }
+        else
+        {
+            // Download the file from Firebase Storage and save it to local storage
+            UnityWebRequest www = UnityWebRequest.Get(storageUrl + "models%2F" + fileName + "?alt=media");
+            www.downloadHandler = new DownloadHandlerFile(localPath + fileName);
+            yield return www.SendWebRequest();
 
-        Debug.Log("File " + fileName + " downloaded and saved to " + localPath);
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(www.error);
+                yield break;
+            }
+
+            Debug.Log("File " + fileName + " downloaded and saved to " + localPath);
+        }
 
         // Load the GLTF file using the GLTFUtility library
         GameObject gltfObject = Importer.LoadFromFile(localPath + fileName);
@@ -85,7 +102,7 @@ public class MultiModelLoader : MonoBehaviour
         gltfObject.name = Path.GetFileNameWithoutExtension(fileName);
 
         // Position the object in the scene as desired
-        gltfObject.transform.position = Vector3.zero;
+        gltfObject.transform.position = position;
 
         // Rotate the object as desired
         gltfObject.transform.rotation = Quaternion.identity;
