@@ -105,6 +105,6 @@ public class MultiModelLoader : MonoBehaviour
         gltfObject.transform.position = position;
 
         // Rotate the object as desired
-        gltfObject.transform.rotation = Quaternion.identity;
+        //gltfObject.transform.rotation = Quaternion.identity;
     }
 }
