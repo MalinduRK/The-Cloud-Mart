@@ -23,11 +23,11 @@ public class MultiModelLoader : MonoBehaviour
 {
     public string storageUrl = "https://firebasestorage.googleapis.com/v0/b/the-cloud-mart.appspot.com/o/";
     public string bucketPath = "models/";
-    public string fileType = ".glb";
     public string apiKey = "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC7KFInf0JYb+/Q";
     public string localPath = "Assets/Models/";
     // Create a parent object to hold all the downloaded objects
-    public GameObject parentObject;
+    public GameObject modelLoaderObject;
+    public GameObject platformObject;
 
     IEnumerator Start()
     {
@@ -48,7 +48,15 @@ public class MultiModelLoader : MonoBehaviour
         ItemList itemList = JsonConvert.DeserializeObject<ItemList>(response);
 
         // Set initial position for the first game object
-        Vector3 position = parentObject.transform.position;
+        Vector3 position = modelLoaderObject.transform.position;
+
+        // Set the scale of the parent object to perform correct positioning of the objects
+        float parentX = 3;
+        float parentY = 1;
+        float parentZ = 3;
+
+        // Counter for placing the objects in different positions
+        int counter = 1;
 
         foreach (var item in itemList.items)
         {
@@ -59,12 +67,27 @@ public class MultiModelLoader : MonoBehaviour
 
             foreach (string fileName in fileNames)
             {
-                if (fileName.EndsWith(fileType))
+                if (fileName.EndsWith(".glb") || fileName.EndsWith(".gltf"))
                 {
+                    switch(counter)
+                    {
+                        case 1: 
+                            position += new Vector3(0 * parentX, 0 * parentY, 0 * parentZ);
+                            break;
+                        case 2:
+                            position += new Vector3(0 * parentX, 0 * parentY, (float)(1.5 * parentZ));
+                            break;
+                        case 3:
+                            position += new Vector3((float)(1.5 * parentX), 0 * parentY, 0 * parentZ);
+                            break;
+                        case 4:
+                            position += new Vector3(0 * parentX, 0 * parentY, (float)(-1.5 * parentZ));
+                            break;
+                        default:
+                            break;
+                    }
                     StartCoroutine(DownloadAndSaveFile(fileName, position));
-
-                    // Update the position for the next game object
-                    position += new Vector3(0, 0, 3);
+                    counter++;
                 }
             }
         }
@@ -100,6 +123,9 @@ public class MultiModelLoader : MonoBehaviour
 
         // Set the object's name to the file name (without extension)
         gltfObject.name = Path.GetFileNameWithoutExtension(fileName);
+
+        // Set the parent object
+        gltfObject.transform.SetParent(platformObject.transform);
 
         // Add a BoxCollider to the object
         gltfObject.AddComponent<BoxCollider>();
