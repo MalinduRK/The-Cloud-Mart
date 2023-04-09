@@ -101,10 +101,13 @@ public class MultiModelLoader : MonoBehaviour
         // Set the object's name to the file name (without extension)
         gltfObject.name = Path.GetFileNameWithoutExtension(fileName);
 
+        // Add a BoxCollider to the object
+        gltfObject.AddComponent<BoxCollider>();
+
         // Position the object in the scene as desired
         gltfObject.transform.position = position;
 
         // Rotate the object as desired
-        //gltfObject.transform.rotation = Quaternion.identity;
+        // gltfObject.transform.rotation = Quaternion.identity;
     }
 }
