@@ -4,6 +4,8 @@ using System.Collections;
 using System.IO;
 using Siccity.GLTFUtility;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System;
 
 [System.Serializable]
 public class Item
@@ -28,10 +30,14 @@ public class MultiModelLoader : MonoBehaviour
     // Create a parent object to hold all the downloaded objects
     public GameObject modelLoaderObject;
     public GameObject platformObject;
+    // Create a dictionary to store the items in separate, dynamically created arrays
+    Dictionary<string, string[]> pages = new Dictionary<string, string[]>();
 
     IEnumerator Start()
     {
         localPath = $"{Application.persistentDataPath}/Files/Models/";
+        // Define array to store names of all files in the firebase storage
+        string[] itemArray = new string[0];
 
         // Load all files from Firebase Storage with .glb extension
         UnityWebRequest www = UnityWebRequest.Get(storageUrl + "?prefix=" + bucketPath);
@@ -59,6 +65,10 @@ public class MultiModelLoader : MonoBehaviour
 
         // Counter for placing the objects in different positions
         int counter = 1;
+        // Counter for items
+        int itemCounter = 0;
+        // Array size changer
+        int arraySize = 0;
 
         foreach (var item in itemList.items)
         {
@@ -71,6 +81,13 @@ public class MultiModelLoader : MonoBehaviour
             {
                 if (fileName.EndsWith(".glb") || fileName.EndsWith(".gltf"))
                 {
+                    // Add 1 to array size whenever a new item is introduced
+                    arraySize++;
+                    Array.Resize(ref itemArray, arraySize);
+                    // Add item to the array one by one for later use
+                    itemArray[itemCounter] = fileName;
+                    Debug.Log("item array = " + itemArray[itemCounter]);
+                    
                     switch(counter)
                     {
                         case 1: 
@@ -93,6 +110,42 @@ public class MultiModelLoader : MonoBehaviour
                 }
             }
         }
+        PaginateItems(itemArray);
+    }
+
+    void PaginateItems(string[] itemName)
+    {
+        // Count the added items to create a proper array
+        int itemCount = 0;
+
+        // Calcualte the number of pages needed
+        double result = (double)itemName.Length / 4;
+        int totalPages = (int)Math.Ceiling(result);
+
+        // Use a for loop to create the variables and add them to the dictionary
+        for (int i = 0; i < totalPages; i++)
+        {
+            // Define the name of the variable
+            string variableName = "page" + (i+1).ToString();
+            string[] variableValue = new string[0];
+
+            for (int j = 0; j <5; j++)
+            {
+                variableValue[j] = itemName[i+itemCount];
+            }
+            itemCount += 4;
+
+            // Add the variable to the dictionary
+            pages.Add(variableName, variableValue);
+        }
+        // Call the LoadFiles function to load in the first four items at the start
+        LoadFiles();
+        Debug.Log(pages);
+    }
+
+    void LoadFiles()
+    {
+
     }
 
     IEnumerator DownloadAndSaveFile(string fileName, Vector3 position)
