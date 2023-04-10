@@ -24,13 +24,15 @@ public class MultiModelLoader : MonoBehaviour
     public string storageUrl = "https://firebasestorage.googleapis.com/v0/b/the-cloud-mart.appspot.com/o/";
     public string bucketPath = "models/";
     public string apiKey = "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC7KFInf0JYb+/Q";
-    public string localPath = "Assets/Models/";
+    public string localPath;
     // Create a parent object to hold all the downloaded objects
     public GameObject modelLoaderObject;
     public GameObject platformObject;
 
     IEnumerator Start()
     {
+        localPath = $"{Application.persistentDataPath}/Files/Models/";
+
         // Load all files from Firebase Storage with .glb extension
         UnityWebRequest www = UnityWebRequest.Get(storageUrl + "?prefix=" + bucketPath);
         yield return www.SendWebRequest();
@@ -126,6 +128,16 @@ public class MultiModelLoader : MonoBehaviour
 
         // Set the parent object
         gltfObject.transform.SetParent(platformObject.transform);
+
+        // Calculate the bounding box of the model
+        Bounds bounds = gltfObject.GetComponentInChildren<MeshRenderer>().bounds;
+
+        // Calculate the scale factor needed to fit the bounding box within a desired size
+        float desiredSize = 2f; // desired size in world units
+        float scaleFactor = desiredSize / bounds.size.magnitude;
+
+        // Apply the scale factor to the model
+        gltfObject.transform.localScale *= scaleFactor;
 
         // Add a BoxCollider to the object
         gltfObject.AddComponent<BoxCollider>();
