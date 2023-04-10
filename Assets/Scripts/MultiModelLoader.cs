@@ -86,7 +86,7 @@ public class MultiModelLoader : MonoBehaviour
                             position += new Vector3(0 * parentX, 0 * parentY, (float)(-1.5 * parentZ));
                             break;
                         default:
-                            break;
+                            yield break;
                     }
                     StartCoroutine(DownloadAndSaveFile(fileName, position));
                     counter++;
