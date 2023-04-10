@@ -86,9 +86,10 @@ public class MultiModelLoader : MonoBehaviour
                     Array.Resize(ref itemArray, arraySize);
                     // Add item to the array one by one for later use
                     itemArray[itemCounter] = fileName;
-                    Debug.Log("item array = " + itemArray[itemCounter]);
-                    
-                    switch(counter)
+                    //Debug.Log("item array = " + itemArray[itemCounter]);
+                    itemCounter++;
+
+                    /*switch(counter)
                     {
                         case 1: 
                             position += new Vector3(0 * parentX, 0 * parentY, 0 * parentZ);
@@ -106,15 +107,21 @@ public class MultiModelLoader : MonoBehaviour
                             yield break;
                     }
                     StartCoroutine(DownloadAndSaveFile(fileName, position));
-                    counter++;
+                    counter++;*/
                 }
             }
         }
+        //Debug.Log("Array size: " + itemArray.Length);
+        /*for (int i = 0; i < itemArray.Length; i++)
+        {
+            Debug.Log(itemArray[i]);
+        }*/
         PaginateItems(itemArray);
     }
 
     void PaginateItems(string[] itemName)
     {
+        //Debug.Log("Length of itemName array: " + itemName.Length);
         // Count the added items to create a proper array
         int itemCount = 0;
 
@@ -127,20 +134,36 @@ public class MultiModelLoader : MonoBehaviour
         {
             // Define the name of the variable
             string variableName = "page" + (i+1).ToString();
-            string[] variableValue = new string[0];
+            string[] variableValue = new string[4];
 
-            for (int j = 0; j <5; j++)
+            for (int j = 0; j <4; j++)
             {
-                variableValue[j] = itemName[i+itemCount];
+                // Prevent the array from going out of bounds
+                if (j+itemCount+1 <= itemName.Length)
+                {
+                    Debug.Log("Name of item " + (j+itemCount) + itemName[j + itemCount]);
+                    variableValue[j] = itemName[j+itemCount];
+                }
+                // Prevent from further looping when the array is completed
+                else
+                {
+                    break;
+                }
             }
             itemCount += 4;
+            Debug.Log("Iteration " + i + " complete");
 
             // Add the variable to the dictionary
             pages.Add(variableName, variableValue);
         }
         // Call the LoadFiles function to load in the first four items at the start
         LoadFiles();
-        Debug.Log(pages);
+        /*
+        Debug.Log(pages["page1"][0]);
+        Debug.Log(pages["page1"][1]);
+        Debug.Log(pages["page1"][2]);
+        Debug.Log(pages["page1"][3]);
+        */
     }
 
     void LoadFiles()
