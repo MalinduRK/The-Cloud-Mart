@@ -6,6 +6,8 @@ using Siccity.GLTFUtility;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
+using UnityEngine.UIElements;
 
 [System.Serializable]
 public class Item
@@ -32,6 +34,8 @@ public class MultiModelLoader : MonoBehaviour
     public GameObject platformObject;
     // Create a dictionary to store the items in separate, dynamically created arrays
     Dictionary<string, string[]> pages = new Dictionary<string, string[]>();
+    // Keep track of page number in display
+    private int pageNumber = 1;
 
     IEnumerator Start()
     {
@@ -54,14 +58,6 @@ public class MultiModelLoader : MonoBehaviour
 
         // Using newtonsoft json parser, we can easily read the json data
         ItemList itemList = JsonConvert.DeserializeObject<ItemList>(response);
-
-        // Set initial position for the first game object
-        Vector3 position = modelLoaderObject.transform.position;
-
-        // Set the scale of the parent object to perform correct positioning of the objects
-        float parentX = 3;
-        float parentY = 1;
-        float parentZ = 3;
 
         // Counter for placing the objects in different positions
         int counter = 1;
@@ -157,7 +153,7 @@ public class MultiModelLoader : MonoBehaviour
             pages.Add(variableName, variableValue);
         }
         // Call the LoadFiles function to load in the first four items at the start
-        LoadFiles();
+        StartCoroutine(LoadFiles());
         /*
         Debug.Log(pages["page1"][0]);
         Debug.Log(pages["page1"][1]);
@@ -166,9 +162,45 @@ public class MultiModelLoader : MonoBehaviour
         */
     }
 
-    void LoadFiles()
+    IEnumerator LoadFiles()
     {
+        // Get the page number as the dictionary key
+        string page = "page" + pageNumber;
 
+        // Set initial position for the first game object
+        Vector3 position = modelLoaderObject.transform.position;
+
+        // Set the scale of the parent object to perform correct positioning of the objects
+        float parentX = 3;
+        float parentY = 1;
+        float parentZ = 3;
+
+        for (int i = 0; i < pages[page].Length; i++)
+        {
+            // Counter to get the positions of loaded items
+            int counter = i + 1;
+
+            switch (counter)
+            {
+                case 1:
+                    position += new Vector3(0 * parentX, 0 * parentY, 0 * parentZ);
+                    break;
+                case 2:
+                    position += new Vector3(0 * parentX, 0 * parentY, (float)(1.5 * parentZ));
+                    break;
+                case 3:
+                    position += new Vector3((float)(1.5 * parentX), 0 * parentY, 0 * parentZ);
+                    break;
+                case 4:
+                    position += new Vector3(0 * parentX, 0 * parentY, (float)(-1.5 * parentZ));
+                    break;
+                default:
+                    Debug.Log("Wrong counter in switch statement!");
+                    yield break;
+            }
+
+            StartCoroutine(DownloadAndSaveFile(pages[page][i], position));
+        }
     }
 
     IEnumerator DownloadAndSaveFile(string fileName, Vector3 position)
