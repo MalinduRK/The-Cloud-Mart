@@ -33,12 +33,14 @@ public class MultiModelLoader : MonoBehaviour
     public string localPath;
     // Create a parent object to hold all the downloaded objects
     public GameObject modelLoaderObject;
-    public GameObject platformObject;
+    public GameObject parentObject;
     // Create a dictionary to store the items in separate, dynamically created arrays
     Dictionary<string, string[]> pages = new Dictionary<string, string[]>();
     // Keep track of page number in display
-    private int pageNumber = 1;
+    private int pageNumber = 0;
     private int totalPages = 0;
+    // Loaded models
+    private GameObject gltfObject;
     //
     // Variables related to loading more items
     public Text promptText;
@@ -110,7 +112,7 @@ public class MultiModelLoader : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, maxDistance) && hit.collider.gameObject == buttonObject)
         {
-            promptText.text = "Load more items\n(LMB)";
+            promptText.text = "Load more items\n(LMB)\n(" + pageNumber + "/" + totalPages + ")";
             if (Mouse.current.leftButton.wasPressedThisFrame)
             {
                 Debug.Log("Mouse button pressed");
@@ -174,6 +176,19 @@ public class MultiModelLoader : MonoBehaviour
 
     public IEnumerator LoadFiles()
     {
+        DestroyItems();
+        // Pages should flip only up to the maximum number of pages
+        if (pageNumber < totalPages)
+        {
+            Debug.Log("Flip page");
+            pageNumber++;
+        }
+        // Otherwise, reset to the first page
+        else
+        {
+            pageNumber = 1;
+        }
+
         Debug.Log("Loading files");
 
         // Get the page number as the dictionary key
@@ -214,20 +229,17 @@ public class MultiModelLoader : MonoBehaviour
 
             StartCoroutine(DownloadAndSaveFile(pages[page][i], position));
         }
-
-        // Pages should flip only up to the maximum number of pages
-        if (pageNumber < totalPages)
-        {
-            Debug.Log("Flip page");
-            pageNumber++;
-        }
-        // Otherwise, reset to the first page
-        else
-        {
-            pageNumber = 1;
-        }
     }
 
+    void DestroyItems()
+    {
+        Debug.Log("Destroying items");
+        // Iterate through all the child objects and destroy them
+        foreach (Transform child in parentObject.transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
     IEnumerator DownloadAndSaveFile(string fileName, Vector3 position)
     {
         string filePath = localPath + fileName;
@@ -254,13 +266,13 @@ public class MultiModelLoader : MonoBehaviour
         }
 
         // Load the GLTF file using the GLTFUtility library
-        GameObject gltfObject = Importer.LoadFromFile(localPath + fileName);
+        gltfObject = Importer.LoadFromFile(localPath + fileName);
 
         // Set the object's name to the file name (without extension)
         gltfObject.name = Path.GetFileNameWithoutExtension(fileName);
 
         // Set the parent object
-        gltfObject.transform.SetParent(platformObject.transform);
+        gltfObject.transform.SetParent(parentObject.transform);
 
         // Calculate the bounding box of the model
         Bounds bounds = gltfObject.GetComponentInChildren<MeshRenderer>().bounds;
