@@ -59,8 +59,6 @@ public class MultiModelLoader : MonoBehaviour
         // Using newtonsoft json parser, we can easily read the json data
         ItemList itemList = JsonConvert.DeserializeObject<ItemList>(response);
 
-        // Counter for placing the objects in different positions
-        int counter = 1;
         // Counter for items
         int itemCounter = 0;
         // Array size changer
@@ -84,26 +82,6 @@ public class MultiModelLoader : MonoBehaviour
                     itemArray[itemCounter] = fileName;
                     //Debug.Log("item array = " + itemArray[itemCounter]);
                     itemCounter++;
-
-                    /*switch(counter)
-                    {
-                        case 1: 
-                            position += new Vector3(0 * parentX, 0 * parentY, 0 * parentZ);
-                            break;
-                        case 2:
-                            position += new Vector3(0 * parentX, 0 * parentY, (float)(1.5 * parentZ));
-                            break;
-                        case 3:
-                            position += new Vector3((float)(1.5 * parentX), 0 * parentY, 0 * parentZ);
-                            break;
-                        case 4:
-                            position += new Vector3(0 * parentX, 0 * parentY, (float)(-1.5 * parentZ));
-                            break;
-                        default:
-                            yield break;
-                    }
-                    StartCoroutine(DownloadAndSaveFile(fileName, position));
-                    counter++;*/
                 }
             }
         }
@@ -162,7 +140,7 @@ public class MultiModelLoader : MonoBehaviour
         */
     }
 
-    IEnumerator LoadFiles()
+    public IEnumerator LoadFiles()
     {
         // Get the page number as the dictionary key
         string page = "page" + pageNumber;
