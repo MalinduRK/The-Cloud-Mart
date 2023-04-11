@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System;
 using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 using UnityEngine.UIElements;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class Item
@@ -36,6 +38,14 @@ public class MultiModelLoader : MonoBehaviour
     Dictionary<string, string[]> pages = new Dictionary<string, string[]>();
     // Keep track of page number in display
     private int pageNumber = 1;
+    private int totalPages = 0;
+    //
+    // Variables related to loading more items
+    public Text promptText;
+    public Camera mainCamera;
+    // Distance where the text prompt is triggered
+    public float maxDistance = 2.5f;
+    public GameObject buttonObject;
 
     IEnumerator Start()
     {
@@ -93,6 +103,26 @@ public class MultiModelLoader : MonoBehaviour
         PaginateItems(itemArray);
     }
 
+    private void Update()
+    {
+        Ray ray = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, maxDistance) && hit.collider.gameObject == buttonObject)
+        {
+            promptText.text = "Load more items\n(LMB)";
+            if (Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                Debug.Log("Mouse button pressed");
+                StartCoroutine(LoadFiles());
+            }
+        }
+        else
+        {
+            promptText.text = "";
+        }
+    }
+
     void PaginateItems(string[] itemName)
     {
         //Debug.Log("Length of itemName array: " + itemName.Length);
@@ -101,7 +131,7 @@ public class MultiModelLoader : MonoBehaviour
 
         // Calcualte the number of pages needed
         double result = (double)itemName.Length / 4;
-        int totalPages = (int)Math.Ceiling(result);
+        totalPages = (int)Math.Ceiling(result);
 
         // Use a for loop to create the variables and add them to the dictionary
         for (int i = 0; i < totalPages; i++)
@@ -121,6 +151,8 @@ public class MultiModelLoader : MonoBehaviour
                 // Prevent from further looping when the array is completed
                 else
                 {
+                    // Resize array to match the number of items in the page
+                    Array.Resize(ref variableValue, j);
                     break;
                 }
             }
@@ -142,6 +174,8 @@ public class MultiModelLoader : MonoBehaviour
 
     public IEnumerator LoadFiles()
     {
+        Debug.Log("Loading files");
+
         // Get the page number as the dictionary key
         string page = "page" + pageNumber;
 
@@ -155,6 +189,7 @@ public class MultiModelLoader : MonoBehaviour
 
         for (int i = 0; i < pages[page].Length; i++)
         {
+            Debug.Log("Page length: " + pages[page].Length);
             // Counter to get the positions of loaded items
             int counter = i + 1;
 
@@ -178,6 +213,18 @@ public class MultiModelLoader : MonoBehaviour
             }
 
             StartCoroutine(DownloadAndSaveFile(pages[page][i], position));
+        }
+
+        // Pages should flip only up to the maximum number of pages
+        if (pageNumber < totalPages)
+        {
+            Debug.Log("Flip page");
+            pageNumber++;
+        }
+        // Otherwise, reset to the first page
+        else
+        {
+            pageNumber = 1;
         }
     }
 
