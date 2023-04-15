@@ -1,3 +1,15 @@
+// Open image field only if the checkbox is checked
+const imageCheckbox = document.getElementById('image-check');
+var addImageButton = document.getElementById("add-image-button");
+
+imageCheckbox.addEventListener('change', function() {
+    if (this.checked) {
+        addImageButton.style.display = "block";
+    } else {
+        addImageButton.style.display = "none";
+    }
+});
+
 // Open model fields only if the checkbox is checked
 const modelCheckbox = document.getElementById('model-check');
 var modelBox = document.getElementById("model-box");
@@ -10,15 +22,15 @@ modelCheckbox.addEventListener('change', function() {
     }
 });
 
-// Open image field only if the checkbox is checked
-const imageCheckbox = document.getElementById('image-check');
-var addImageButton = document.getElementById("add-image-button");
+// Open dimension fields only if the checkbox is checked
+const dimensionCheckbox = document.getElementById('dimension-check');
+var dimensionBox = document.getElementById("dimension-box");
 
-imageCheckbox.addEventListener('change', function() {
+dimensionCheckbox.addEventListener('change', function() {
     if (this.checked) {
-        addImageButton.style.display = "block";
+        dimensionBox.style.display = "block";
     } else {
-        addImageButton.style.display = "none";
+        dimensionBox.style.display = "none";
     }
 });
 
@@ -64,40 +76,15 @@ form.addEventListener("submit", async function(event) {
     var name = itemName.value;
     var price = parseFloat(itemPrice.value);
     var description = itemDescription.value;
-    const imageFile = form.elements.image.files[0];
+
+    // Image
+    var imageCheck =imageCheckbox.checked;
+    
     // Model values
     var modelCheck = modelCheckbox.checked;
-    var length = null;
-    var width = null;
-    var height = null;
-    var modelFile = null;
-    var modelUrl = null;
-    
-    var imageUrl = null;
-    // Upload image only if the checkbox is checked
-    if (imageCheckbox.checked) {
-        console.log('Uploading image');
-        // Upload the image file to Firebase Storage
-        const storageRef = firebase.storage().ref().child("images/" + imageFile.name);
-        const snapshot = await storageRef.put(imageFile);
-        // Get the download URL for the image file
-        imageUrl = await snapshot.ref.getDownloadURL();
-    }
-
-    // Get model values only if the checkbox is checked
-    if (modelCheck) {
-        console.log('Uploading model');
-        length = parseFloat(itemLength.value);
-        width = parseFloat(itemWidth.value);
-        height = parseFloat(itemHeight.value);
-        modelFile = form.elements.model.files[0];
-
-        // Upload the model file to Firebase Storage
-        const storageRef_model = firebase.storage().ref().child("models/" + modelFile.name);
-        const snapshot_model = await storageRef_model.put(modelFile);
-        // Get the download URL for the model file
-        modelUrl = await snapshot_model.ref.getDownloadURL();
-    }
+    var length = parseFloat(itemLength.value);;
+    var width = parseFloat(itemWidth.value);
+    var height = parseFloat(itemHeight.value);
 
     // Create a new document in the "items" collection with the item data
     db.collection(category).add({
@@ -105,15 +92,21 @@ form.addEventListener("submit", async function(event) {
         itemDescription: description,
         itemPrice: price,
         sellerName: "sellerbot",
-        imageUrl: imageUrl,
         modelAdded: modelCheck,
         itemLength: length,
         itemWidth: width,
-        itemHeight: height,
-        modelUrl: modelUrl
+        itemHeight: height
     })
-    .then(function(docRef) {
+    .then(async function(docRef) {
         console.log("Item added with ID: ", docRef.id);
+        // Upload image only if the checkbox is checked
+        if (imageCheck) {
+            await uploadImage(docRef.id);
+        }
+        // Get model values only if the checkbox is checked
+        if (modelCheck) {
+            await uploadModel(docRef.id);
+        }
         alert("Successfully added item!");
         location.reload();
     })
@@ -121,3 +114,27 @@ form.addEventListener("submit", async function(event) {
         console.error("Error adding item: ", error);
     });
 });
+
+async function uploadImage(itemId) {
+    console.log('Uploading image');
+    const imageFile = form.elements.image.files[0];
+
+    // Upload the image file to Firebase Storage
+    const storageRef = firebase.storage().ref().child("images/" + itemId + "_image");
+    await storageRef.put(imageFile);
+    //const snapshot = await storageRef.put(imageFile);
+    // Get the download URL for the image file
+    //imageUrl = await snapshot.ref.getDownloadURL();
+}
+
+async function uploadModel(itemId) {
+    console.log('Uploading model');
+    modelFile = form.elements.model.files[0];
+
+    // Upload the model file to Firebase Storage
+    const storageRef_model = firebase.storage().ref().child("models/" + itemId + "_model");
+    await storageRef_model.put(modelFile);
+    //const snapshot_model = await storageRef_model.put(modelFile);
+    // Get the download URL for the model file
+    //modelUrl = await snapshot_model.ref.getDownloadURL();
+}

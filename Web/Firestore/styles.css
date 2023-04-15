@@ -92,6 +92,10 @@ body{
     display: none;
 }
 
+#dimension-box{
+    display: none;
+}
+
 #add-image-button {
     display: none;
 }
