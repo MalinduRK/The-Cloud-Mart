@@ -44,6 +44,7 @@ const storage = firebase.storage().ref();
 var form = document.getElementById("item-form");
 
 // Get references to the form input fields
+var itemCategory = document.getElementById("item-category");
 var itemName = document.getElementById("item-name");
 var itemPrice = document.getElementById("item-price");
 var itemDescription = document.getElementById("item-description");
@@ -59,6 +60,7 @@ form.addEventListener("submit", async function(event) {
     console.log("Adding item to firebase...");
 
     // Get the values from the input fields
+    var category = itemCategory.value;
     var name = itemName.value;
     var price = parseFloat(itemPrice.value);
     var description = itemDescription.value;
@@ -98,7 +100,7 @@ form.addEventListener("submit", async function(event) {
     }
 
     // Create a new document in the "items" collection with the item data
-    db.collection("items").add({
+    db.collection(category).add({
         itemName: name,
         itemDescription: description,
         itemPrice: price,

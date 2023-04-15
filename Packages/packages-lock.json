@@ -207,10 +207,11 @@
       "url": "https://packages.unity.com"
     },
     "io.realm.unity": {
-      "version": "file:C:/Users/Admin/Downloads/io.realm.unity-10.21.0.tgz",
+      "version": "10.21.0",
       "depth": 0,
-      "source": "local-tarball",
-      "dependencies": {}
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://registry.npmjs.org"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

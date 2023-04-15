@@ -238,8 +238,10 @@ public class MultiModelLoader : MonoBehaviour
         foreach (Transform child in parentObject.transform)
         {
             Destroy(child.gameObject);
+            Debug.Log("Destroyed item: " + child.gameObject);
         }
     }
+
     IEnumerator DownloadAndSaveFile(string fileName, Vector3 position)
     {
         string filePath = localPath + fileName;
