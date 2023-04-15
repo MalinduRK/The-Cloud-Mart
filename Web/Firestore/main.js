@@ -65,11 +65,15 @@ var itemLength = document.getElementById("item-length");
 var itemWidth = document.getElementById("item-width");
 var itemHeight = document.getElementById("item-height");
 
+var progressText = document.getElementById("progress-text");
+progressText.textContent = "This is working";
+
 // Handle form submission
 form.addEventListener("submit", async function(event) {
     event.preventDefault(); // prevent the form from submitting normally
 
     console.log("Adding item to firebase...");
+    progressText.textContent = "Adding item to firebase...";
 
     // Get the values from the input fields
     var category = itemCategory.value;
@@ -107,6 +111,7 @@ form.addEventListener("submit", async function(event) {
         if (modelCheck) {
             await uploadModel(docRef.id);
         }
+        progressText.textContent = "Completed!";
         alert("Successfully added item!");
         location.reload();
     })
@@ -117,6 +122,7 @@ form.addEventListener("submit", async function(event) {
 
 async function uploadImage(itemId) {
     console.log('Uploading image');
+    progressText.textContent = "Uploading image to firebase...";
     const imageFile = form.elements.image.files[0];
 
     // Upload the image file to Firebase Storage
@@ -129,6 +135,7 @@ async function uploadImage(itemId) {
 
 async function uploadModel(itemId) {
     console.log('Uploading model');
+    progressText.textContent = "Uploading model to firebase...";
     modelFile = form.elements.model.files[0];
 
     // Upload the model file to Firebase Storage

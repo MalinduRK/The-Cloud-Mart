@@ -88,14 +88,14 @@ body{
     font-size: 16px;
 }
 
+#add-image-button {
+    display: none;
+}
+
 #model-box{
     display: none;
 }
 
 #dimension-box{
-    display: none;
-}
-
-#add-image-button {
     display: none;
 }
