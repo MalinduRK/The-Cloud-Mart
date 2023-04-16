@@ -6,8 +6,6 @@ using Siccity.GLTFUtility;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System;
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
-using UnityEngine.UIElements;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -27,6 +25,7 @@ public class ItemList
 
 public class MultiModelLoader : MonoBehaviour
 {
+    public bool debug;
     public string storageUrl = "https://firebasestorage.googleapis.com/v0/b/the-cloud-mart.appspot.com/o/";
     public string bucketPath = "models/";
     public string apiKey = "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC7KFInf0JYb+/Q";
@@ -115,7 +114,8 @@ public class MultiModelLoader : MonoBehaviour
             promptText.text = "Load more items\n(LMB)\n(" + pageNumber + "/" + totalPages + ")";
             if (Mouse.current.leftButton.wasPressedThisFrame)
             {
-                Debug.Log("Mouse button pressed");
+
+                CustomDebug("Mouse button pressed");
                 StartCoroutine(LoadFiles());
             }
         }
@@ -147,7 +147,7 @@ public class MultiModelLoader : MonoBehaviour
                 // Prevent the array from going out of bounds
                 if (j+itemCount+1 <= itemName.Length)
                 {
-                    Debug.Log("Name of item " + (j+itemCount) + itemName[j + itemCount]);
+                    CustomDebug("Name of item " + (j+itemCount) + itemName[j + itemCount]);
                     variableValue[j] = itemName[j+itemCount];
                 }
                 // Prevent from further looping when the array is completed
@@ -159,7 +159,7 @@ public class MultiModelLoader : MonoBehaviour
                 }
             }
             itemCount += 4;
-            Debug.Log("Iteration " + i + " complete");
+            CustomDebug("Iteration " + i + " complete");
 
             // Add the variable to the dictionary
             pages.Add(variableName, variableValue);
@@ -180,7 +180,7 @@ public class MultiModelLoader : MonoBehaviour
         // Pages should flip only up to the maximum number of pages
         if (pageNumber < totalPages)
         {
-            Debug.Log("Flip page");
+            CustomDebug("Flip page");
             pageNumber++;
         }
         // Otherwise, reset to the first page
@@ -189,7 +189,7 @@ public class MultiModelLoader : MonoBehaviour
             pageNumber = 1;
         }
 
-        Debug.Log("Loading files");
+        CustomDebug("Loading files");
 
         // Get the page number as the dictionary key
         string page = "page" + pageNumber;
@@ -204,7 +204,7 @@ public class MultiModelLoader : MonoBehaviour
 
         for (int i = 0; i < pages[page].Length; i++)
         {
-            Debug.Log("Page length: " + pages[page].Length);
+            CustomDebug("Page length: " + pages[page].Length);
             // Counter to get the positions of loaded items
             int counter = i + 1;
 
@@ -233,12 +233,12 @@ public class MultiModelLoader : MonoBehaviour
 
     void DestroyItems()
     {
-        Debug.Log("Destroying items");
+        CustomDebug("Destroying items");
         // Iterate through all the child objects and destroy them
         foreach (Transform child in parentObject.transform)
         {
             Destroy(child.gameObject);
-            Debug.Log("Destroyed item: " + child.gameObject);
+            CustomDebug("Destroyed item: " + child.gameObject);
         }
     }
 
@@ -249,7 +249,7 @@ public class MultiModelLoader : MonoBehaviour
         // Check if the file already exists
         if (File.Exists(filePath))
         {
-            Debug.Log("File " + fileName + " already exists in " + localPath);
+            CustomDebug("File " + fileName + " already exists in " + localPath);
         }
         else
         {
@@ -264,7 +264,7 @@ public class MultiModelLoader : MonoBehaviour
                 yield break;
             }
 
-            Debug.Log("File " + fileName + " downloaded and saved to " + localPath);
+            CustomDebug("File " + fileName + " downloaded and saved to " + localPath);
         }
 
         // Load the GLTF file using the GLTFUtility library
@@ -294,5 +294,13 @@ public class MultiModelLoader : MonoBehaviour
 
         // Rotate the object as desired
         // gltfObject.transform.rotation = Quaternion.identity;
+    }
+
+    private void CustomDebug(string message)
+    {
+        if (debug)
+        {
+            Debug.Log(message);
+        }
     }
 }

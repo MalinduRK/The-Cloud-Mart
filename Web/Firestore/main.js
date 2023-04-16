@@ -66,7 +66,6 @@ var itemWidth = document.getElementById("item-width");
 var itemHeight = document.getElementById("item-height");
 
 var progressText = document.getElementById("progress-text");
-progressText.textContent = "This is working";
 
 // Handle form submission
 form.addEventListener("submit", async function(event) {
