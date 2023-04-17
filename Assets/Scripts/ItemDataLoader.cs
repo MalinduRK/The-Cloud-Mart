@@ -2,11 +2,15 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using System;
 
 public class ItemDataLoader : MonoBehaviour
 {
     public bool debug;
     public ItemDataStore dataStore;
+    // This is a C# event
+    public event Action<string[]> OnDocumentLoaded;
 
     // Start is called before the first frame update
     void Start()
@@ -74,7 +78,11 @@ public class ItemDataLoader : MonoBehaviour
                         //CustomDebug("Item name: " + itemName);
                     }
                 }
-                dataStore.documentId = docIdArray;
+                //dataStore.documentId = docIdArray;
+                if (docIdArray != null)
+                {
+                    OnDocumentLoaded(docIdArray);
+                }
             }
         }
     }

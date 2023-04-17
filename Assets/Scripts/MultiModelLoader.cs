@@ -47,9 +47,19 @@ public class MultiModelLoader : MonoBehaviour
     // Distance where the text prompt is triggered
     public float maxDistance = 2.5f;
     public GameObject buttonObject;
+    // Firestore data
+    public ItemDataStore dataStore;
+    private bool firestoreDataLoaded = false;
 
     IEnumerator Start()
     {
+        ItemDataLoader firestoreReader = FindObjectOfType<ItemDataLoader>();
+        // Subscribe to the loader event from ItemDataLoader
+        if (firestoreReader != null)
+        {
+            firestoreReader.OnDocumentLoaded += DocumentLoadedCallback;
+        }
+
         localPath = $"{Application.persistentDataPath}/Files/Models/";
         // Define array to store names of all files in the firebase storage
         string[] itemArray = new string[0];
@@ -106,6 +116,13 @@ public class MultiModelLoader : MonoBehaviour
 
     private void Update()
     {
+        ItemDataLoader firestoreReader = FindObjectOfType<ItemDataLoader>();
+        // Check if the firestore data had loaded up and is ready
+        if (firestoreDataLoaded && dataStore != null)
+        {
+            firestoreReader.OnDocumentLoaded += DocumentLoadedCallback;
+        }
+
         Ray ray = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
         RaycastHit hit;
 
@@ -123,6 +140,13 @@ public class MultiModelLoader : MonoBehaviour
         {
             promptText.text = "";
         }
+    }
+
+    private void DocumentLoadedCallback(string[] documentData)
+    {
+        // Set the flag to indicate that the Firestore data has been loaded
+        firestoreDataLoaded = true;
+        Debug.Log($"Document loaded: {documentData}");
     }
 
     void PaginateItems(string[] itemName)
