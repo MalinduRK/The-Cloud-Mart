@@ -84,13 +84,24 @@ form.addEventListener("submit", async function(event) {
     var description = itemDescription.value;
 
     // Image
-    var imageCheck =imageCheckbox.checked;
+    var imageCheck = imageCheckbox.checked;
     
     // Model values
     var modelCheck = modelCheckbox.checked;
     var length = parseFloat(itemLength.value);;
     var width = parseFloat(itemWidth.value);
     var height = parseFloat(itemHeight.value);
+
+    // Image or model file
+    const imageFile = form.elements.image.files[0];
+    const modelFile = form.elements.model.files[0];
+
+    // Extract the file extensions from the file name
+    const imageFileName = imageFile.name;
+    const imageFileExtension = imageFileName.substr(imageFileName.lastIndexOf('.') + 1);
+
+    const modelFileName = modelFile.name;
+    const modelFileExtension = modelFileName.substr(modelFileName.lastIndexOf('.') + 1);
 
     // Create a new document in the "items" collection with the item data
     db.collection(category).add({
@@ -101,17 +112,19 @@ form.addEventListener("submit", async function(event) {
         modelAdded: modelCheck,
         itemLength: length,
         itemWidth: width,
-        itemHeight: height
+        itemHeight: height,
+        imageFileExtension: imageFileExtension,
+        modelFileExtension: modelFileExtension
     })
     .then(async function(docRef) {
         console.log("Item added with ID: ", docRef.id);
         // Upload image only if the checkbox is checked
         if (imageCheck) {
-            await uploadImage(docRef.id);
+            await uploadImage(docRef.id, imageFile, imageFileExtension);
         }
         // Get model values only if the checkbox is checked
         if (modelCheck) {
-            await uploadModel(docRef.id);
+            await uploadModel(docRef.id, modelFile, modelFileExtension);
         }
         progressText.textContent = "Completed!";
         alert("Successfully added item!");
@@ -122,14 +135,9 @@ form.addEventListener("submit", async function(event) {
     });
 });
 
-async function uploadImage(itemId) {
+async function uploadImage(itemId, imageFile, fileExtension) {
     console.log('Uploading image');
     progressText.textContent = "Uploading image to firebase...";
-    const imageFile = form.elements.image.files[0];
-
-    // Extract the file extension from the file name
-    const fileName = imageFile.name;
-    const fileExtension = fileName.substr(fileName.lastIndexOf('.') + 1);
 
     // Upload the image file to Firebase Storage
     const storageRef = firebase.storage().ref().child("images/" + itemId + "_image." + fileExtension);
@@ -139,14 +147,9 @@ async function uploadImage(itemId) {
     //imageUrl = await snapshot.ref.getDownloadURL();
 }
 
-async function uploadModel(itemId) {
+async function uploadModel(itemId, modelFile, fileExtension) {
     console.log('Uploading model');
     progressText.textContent = "Uploading model to firebase...";
-    modelFile = form.elements.model.files[0];
-
-    // Extract the file extension from the file name
-    const fileName = modelFile.name;
-    const fileExtension = fileName.substr(fileName.lastIndexOf('.') + 1);
 
     // Upload the model file to Firebase Storage
     const storageRef_model = firebase.storage().ref().child("models/" + itemId + "_model." + fileExtension);
