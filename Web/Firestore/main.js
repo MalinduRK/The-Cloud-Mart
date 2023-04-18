@@ -69,7 +69,10 @@ var progressText = document.getElementById("progress-text");
 
 // Handle form submission
 form.addEventListener("submit", async function(event) {
-    event.preventDefault(); // prevent the form from submitting normally
+    // Prevent the form from submitting normally
+    event.preventDefault();
+    // Disable the submit button while submitting
+    document.getElementById('submit-button').disabled = true;
 
     console.log("Adding item to firebase...");
     progressText.textContent = "Adding item to firebase...";

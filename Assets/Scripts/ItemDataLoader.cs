@@ -27,7 +27,7 @@ public class ItemDataLoader : MonoBehaviour
     IEnumerator retrieveFromDatabase()
     {
         // Construct the URL for the Firestore document
-        string url = $"https://firestore.googleapis.com/v1/projects/the-cloud-mart/databases/(default)/documents/cupboard/";
+        string url = $"https://firestore.googleapis.com/v1/projects/the-cloud-mart/databases/(default)/documents/other/";
 
         using (UnityWebRequest www = UnityWebRequest.Get(url))
         {
