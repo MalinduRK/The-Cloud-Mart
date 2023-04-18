@@ -124,8 +124,12 @@ async function uploadImage(itemId) {
     progressText.textContent = "Uploading image to firebase...";
     const imageFile = form.elements.image.files[0];
 
+    // Extract the file extension from the file name
+    const fileName = imageFile.name;
+    const fileExtension = fileName.substr(fileName.lastIndexOf('.') + 1);
+
     // Upload the image file to Firebase Storage
-    const storageRef = firebase.storage().ref().child("images/" + itemId + "_image");
+    const storageRef = firebase.storage().ref().child("images/" + itemId + "_image." + fileExtension);
     await storageRef.put(imageFile);
     //const snapshot = await storageRef.put(imageFile);
     // Get the download URL for the image file
@@ -137,8 +141,12 @@ async function uploadModel(itemId) {
     progressText.textContent = "Uploading model to firebase...";
     modelFile = form.elements.model.files[0];
 
+    // Extract the file extension from the file name
+    const fileName = modelFile.name;
+    const fileExtension = fileName.substr(fileName.lastIndexOf('.') + 1);
+
     // Upload the model file to Firebase Storage
-    const storageRef_model = firebase.storage().ref().child("models/" + itemId + "_model");
+    const storageRef_model = firebase.storage().ref().child("models/" + itemId + "_model." + fileExtension);
     await storageRef_model.put(modelFile);
     //const snapshot_model = await storageRef_model.put(modelFile);
     // Get the download URL for the model file

@@ -27,7 +27,7 @@ public class ItemDataLoader : MonoBehaviour
     IEnumerator retrieveFromDatabase()
     {
         // Construct the URL for the Firestore document
-        string url = $"https://firestore.googleapis.com/v1/projects/the-cloud-mart/databases/(default)/documents/items/";
+        string url = $"https://firestore.googleapis.com/v1/projects/the-cloud-mart/databases/(default)/documents/cupboard/";
 
         using (UnityWebRequest www = UnityWebRequest.Get(url))
         {
@@ -39,12 +39,13 @@ public class ItemDataLoader : MonoBehaviour
             }
             else
             {
+                Debug.Log("Retrieving from firestore");
                 // Parse the response JSON and put each document into a separate variable
                 string responseJson = www.downloadHandler.text;
                 JObject response = JObject.Parse(responseJson);
                 JArray documents = (JArray)response["documents"];
                 //CustomDebug(documents.ToString());
-                //CustomDebug(documents.Count.ToString());
+                CustomDebug("No. of documents: " + documents.Count.ToString());
 
                 // Initialize an array of document ids to be sent to the datastore
                 string[] docIdArray = new string[0];
@@ -60,11 +61,13 @@ public class ItemDataLoader : MonoBehaviour
                     if (modelAddedToken != null)
                     {
                         string modelAdded = modelAddedToken["booleanValue"].ToString();
+                        Debug.Log("Value of modelAdded variable: " + modelAdded);
 
-                        if (modelAdded == "true")
+                        if (modelAdded == "True")
                         {
+                            Debug.Log("Model added");
                             // Increase size of array by 1 for each item that is viable
-                            Array.Resize(ref docIdArray, arraySize++);
+                            Array.Resize(ref docIdArray, ++arraySize);
 
                             // Get the filepath of the document in firebase
                             string documentUrl = document["name"].ToString();
@@ -84,6 +87,7 @@ public class ItemDataLoader : MonoBehaviour
                         }
                     }
                 }
+
                 //dataStore.documentId = docIdArray;
                 if (docIdArray != null)
                 {
