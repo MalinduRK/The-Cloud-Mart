@@ -147,7 +147,11 @@ public class MultiModelLoader : MonoBehaviour
         // Set the flag to indicate that the Firestore data has been loaded
         firestoreDataLoaded = true;
 
-        PaginateItems(documentData);
+        if (documentData.Length > 0)
+        {
+            CustomDebug($"Number of documents: {documentData.Length}");
+            PaginateItems(documentData);
+        }
     }
 
     void PaginateItems(string[] itemName)
@@ -172,7 +176,7 @@ public class MultiModelLoader : MonoBehaviour
                 // Prevent the array from going out of bounds
                 if (j+itemCount+1 <= itemName.Length)
                 {
-                    Debug.Log("Name of item " + (j+itemCount) + itemName[j + itemCount]);
+                    //Debug.Log("Name of item " + (j+itemCount) + itemName[j + itemCount]);
                     variableValue[j] = itemName[j+itemCount];
                 }
                 // Prevent from further looping when the array is completed
@@ -270,7 +274,7 @@ public class MultiModelLoader : MonoBehaviour
     IEnumerator DownloadAndSaveFile(string fileName, Vector3 position)
     {
         fileName += "_model.glb";
-        Debug.Log(fileName);
+        //Debug.Log(fileName);
         string filePath = localPath + fileName;
 
         // Check if the file already exists
