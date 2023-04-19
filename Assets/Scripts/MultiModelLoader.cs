@@ -216,22 +216,22 @@ public class MultiModelLoader : MonoBehaviour
 
                     string modelFileExtension = "";
                     // Add extension value only if it is not null
-                    if (fields["imageFileExtension"]["stringValue"] == null)
+                    if (fields["imageFileExtension"]["stringValue"] != null)
                     {
                         modelFileExtension = fields["modelFileExtension"]["stringValue"].ToString();
                     }
 
                     // Add all the document data to the items dictionary, using the data model class ItemDataStore
                     items.Add(documentId, new ItemDataStore{ 
-                        itemName = itemName,
-                        itemDescription = itemDescription,
-                        itemPrice = itemPrice,
-                        sellerName = sellerName,
-                        itemLength = itemLength,
-                        itemWidth = itemWidth,
-                        itemHeight = itemHeight,
-                        imageFileExtension = imageFileExtension,
-                        modelFileExtension = modelFileExtension
+                        ItemName = itemName,
+                        ItemDescription = itemDescription,
+                        ItemPrice = itemPrice,
+                        SellerName = sellerName,
+                        ItemLength = itemLength,
+                        ItemWidth = itemWidth,
+                        ItemHeight = itemHeight,
+                        ImageFileExtension = imageFileExtension,
+                        ModelFileExtension = modelFileExtension
                     });
                 }
             }
@@ -363,8 +363,9 @@ public class MultiModelLoader : MonoBehaviour
 
     IEnumerator DownloadAndSaveFile(string fileName, Vector3 position)
     {
-        string extension = items[fileName].modelFileExtension;
+        string extension = items[fileName].ModelFileExtension;
         Debug.Log(extension);
+        Debug.Log(items[fileName].ItemName);
         fileName += "_model." + extension;
         //Debug.Log(fileName);
         string filePath = localPath + fileName;
