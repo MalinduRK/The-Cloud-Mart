@@ -10,7 +10,7 @@ public class ItemDataLoader : MonoBehaviour
     public bool debug;
     public ItemDataStore dataStore;
     // This is a C# event
-    public event Action<string[]> OnDocumentLoaded;
+    public event Action<JArray> OnDocumentLoaded;
 
     // Start is called before the first frame update
     void Start()
@@ -45,6 +45,13 @@ public class ItemDataLoader : MonoBehaviour
                 JObject response = JObject.Parse(responseJson);
                 JArray documents = (JArray)response["documents"];
                 //CustomDebug(documents.ToString());
+
+                if (documents != null)
+                {
+                    OnDocumentLoaded(documents);
+                }
+
+                /*
                 CustomDebug("No. of documents: " + documents.Count.ToString());
 
                 // Initialize an array of document ids to be sent to the datastore
@@ -93,6 +100,8 @@ public class ItemDataLoader : MonoBehaviour
                 {
                     OnDocumentLoaded(docIdArray);
                 }
+
+                */
             }
         }
     }
