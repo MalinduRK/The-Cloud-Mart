@@ -9,6 +9,9 @@ using System;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Newtonsoft.Json.Linq;
+using TMPro;
+using static Cinemachine.DocumentationSortingAttribute;
+using UnityEngine.SocialPlatforms.Impl;
 
 [System.Serializable]
 public class Item
@@ -55,7 +58,7 @@ public class MultiModelLoader : MonoBehaviour
     Dictionary<string, ItemDataStore> items = new Dictionary<string, ItemDataStore>();
     private bool firestoreDataLoaded = false;
 
-    IEnumerator Start()
+    void Start()
     {
         ItemDataLoader firestoreReader = FindObjectOfType<ItemDataLoader>();
         // Subscribe to the loader event from ItemDataLoader
@@ -65,57 +68,6 @@ public class MultiModelLoader : MonoBehaviour
         }
 
         localPath = $"{Application.persistentDataPath}/Files/Models/";
-        // Define array to store names of all files in the firebase storage
-        string[] itemArray = new string[0];
-
-        // Load all files from Firebase Storage with .glb extension
-        UnityWebRequest www = UnityWebRequest.Get(storageUrl + "?prefix=" + bucketPath);
-        yield return www.SendWebRequest();
-
-        if (www.result != UnityWebRequest.Result.Success)
-        {
-            Debug.Log(www.error);
-            yield break;
-        }
-
-        // Parse response and download each file to local storage
-        string response = www.downloadHandler.text;
-
-        // Using newtonsoft json parser, we can easily read the json data
-        ItemList itemList = JsonConvert.DeserializeObject<ItemList>(response);
-
-        // Counter for items
-        int itemCounter = 0;
-        // Array size changer
-        int arraySize = 0;
-
-        foreach (var item in itemList.items)
-        {
-            //Debug.Log(item.name);
-            //Debug.Log(item.bucket);
-
-            string[] fileNames = item.name.Split('/');
-
-            foreach (string fileName in fileNames)
-            {
-                if (fileName.EndsWith(".glb") || fileName.EndsWith(".gltf"))
-                {
-                    // Add 1 to array size whenever a new item is introduced
-                    arraySize++;
-                    Array.Resize(ref itemArray, arraySize);
-                    // Add item to the array one by one for later use
-                    itemArray[itemCounter] = fileName;
-                    //Debug.Log("item array = " + itemArray[itemCounter]);
-                    itemCounter++;
-                }
-            }
-        }
-        //Debug.Log("Array size: " + itemArray.Length);
-        /*for (int i = 0; i < itemArray.Length; i++)
-        {
-            Debug.Log(itemArray[i]);
-        }*/
-        //PaginateItems(itemArray);
     }
 
     private void Update()
@@ -128,22 +80,27 @@ public class MultiModelLoader : MonoBehaviour
         }
 
         Ray ray = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-        RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, maxDistance) && hit.collider.gameObject == buttonObject)
+        // Check if the player camera is looking at the said object
+        if (Physics.Raycast(ray, out RaycastHit hit, maxDistance) && hit.collider.gameObject == buttonObject)
         {
-            promptText.text = "Load more items\n(LMB)\n(" + pageNumber + "/" + totalPages + ")";
+            promptText.text = "Load more items\n[Left Mouse Button]\n(" + pageNumber + "/" + totalPages + ")";
             if (Mouse.current.leftButton.wasPressedThisFrame)
             {
-
                 CustomDebug("Mouse button pressed");
                 StartCoroutine(LoadFiles());
             }
+        }
+        // Check if the player is looking at a loaded item and take action
+        else if (Physics.Raycast(ray, out hit, maxDistance) && hit.collider.transform.parent != null && hit.collider.transform.parent.gameObject.name == "Items")
+        {
+            promptText.text = "View details\n[Left Mouse Button]";
         }
         else
         {
             promptText.text = "";
         }
+        
     }
 
     private void DocumentLoadedCallback(JArray documents)
@@ -361,12 +318,11 @@ public class MultiModelLoader : MonoBehaviour
         }
     }
 
-    IEnumerator DownloadAndSaveFile(string fileName, Vector3 position)
+    IEnumerator DownloadAndSaveFile(string fileId, Vector3 position)
     {
-        string extension = items[fileName].ModelFileExtension;
-        Debug.Log(extension);
-        Debug.Log(items[fileName].ItemName);
-        fileName += "_model." + extension;
+        string extension = items[fileId].ModelFileExtension;
+        //Debug.Log(extension);
+        string fileName = fileId + "_model." + extension;
         //Debug.Log(fileName);
         string filePath = localPath + fileName;
 
@@ -418,6 +374,14 @@ public class MultiModelLoader : MonoBehaviour
 
         // Rotate the object as desired
         // gltfObject.transform.rotation = Quaternion.identity;
+
+        /*
+        // Attach a TextMeshPro component to the game object
+        TextMeshPro textMeshPro = gltfObject.AddComponent<TextMeshPro>();
+
+        // Set the text of the TextMeshPro component
+        textMeshPro.text = $"Item Name: {items[fileId].ItemName}\nItem Description: {items[fileId].ItemDescription}\nItem Price: {items[fileId].ItemPrice}";
+        */
     }
 
     private void CustomDebug(string message)

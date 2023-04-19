@@ -305,7 +305,7 @@ MonoBehaviour:
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 0
+    m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: 
@@ -1597,7 +1597,6 @@ MonoBehaviour:
   mainCamera: {fileID: 44957407}
   maxDistance: 2.5
   buttonObject: {fileID: 1458099787}
-  dataStore: {fileID: 0}
 --- !u!114 &1211012669
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1611,7 +1610,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 1
-  dataStore: {fileID: 0}
 --- !u!1001 &1212851723
 PrefabInstance:
   m_ObjectHideFlags: 0
