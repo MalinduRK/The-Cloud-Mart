@@ -3,15 +3,11 @@ using UnityEngine.Networking;
 using System.Collections;
 using System.IO;
 using Siccity.GLTFUtility;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Newtonsoft.Json.Linq;
-using TMPro;
-using static Cinemachine.DocumentationSortingAttribute;
-using UnityEngine.SocialPlatforms.Impl;
 
 [System.Serializable]
 public class Item

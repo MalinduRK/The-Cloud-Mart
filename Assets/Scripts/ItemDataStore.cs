@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class ItemDataStore
 {
     public string ItemName { get; set; }
