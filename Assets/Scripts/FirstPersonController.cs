@@ -112,14 +112,24 @@ namespace StarterAssets
 
 		private void Update()
 		{
-			JumpAndGravity();
-			GroundedCheck();
-			Move();
+			// Manual check added. Remove if any conflicts arise with player movement
+			// Prevents user from moving around or jumping when paused
+			if(!PauseMenu.isPaused)
+			{
+                JumpAndGravity();
+                GroundedCheck();
+                Move();
+            }
 		}
 
 		private void LateUpdate()
 		{
-			CameraRotation();
+            // Manual check added. Remove if any conflicts arise with player movement
+			// Prevents camera look when paused
+            if (!PauseMenu.isPaused)
+			{
+                CameraRotation();
+            }
 		}
 
 		private void GroundedCheck()

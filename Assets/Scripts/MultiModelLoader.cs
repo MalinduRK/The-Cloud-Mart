@@ -77,26 +77,29 @@ public class MultiModelLoader : MonoBehaviour
 
         Ray ray = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
-        // Check if the player camera is looking at the said object
-        if (Physics.Raycast(ray, out RaycastHit hit, maxDistance) && hit.collider.gameObject == buttonObject)
+        // Only work if the app isn't paused
+        if (!PauseMenu.isPaused)
         {
-            promptText.text = "Load more items\n[Left Mouse Button]\n(" + pageNumber + "/" + totalPages + ")";
-            if (Mouse.current.leftButton.wasPressedThisFrame)
+            // Check if the player camera is looking at the said object
+            if (Physics.Raycast(ray, out RaycastHit hit, maxDistance) && hit.collider.gameObject == buttonObject)
             {
-                CustomDebug("Mouse button pressed");
-                StartCoroutine(LoadFiles());
+                promptText.text = "Load more items\n[Left Mouse Button]\n(" + pageNumber + "/" + totalPages + ")";
+                if (Mouse.current.leftButton.wasPressedThisFrame)
+                {
+                    CustomDebug("Mouse button pressed");
+                    StartCoroutine(LoadFiles());
+                }
+            }
+            // Check if the player is looking at a loaded item and take action
+            else if (Physics.Raycast(ray, out hit, maxDistance) && hit.collider.transform.parent != null && hit.collider.transform.parent.gameObject.name == "Items")
+            {
+                promptText.text = "View details\n[Left Mouse Button]";
+            }
+            else
+            {
+                promptText.text = "";
             }
         }
-        // Check if the player is looking at a loaded item and take action
-        else if (Physics.Raycast(ray, out hit, maxDistance) && hit.collider.transform.parent != null && hit.collider.transform.parent.gameObject.name == "Items")
-        {
-            promptText.text = "View details\n[Left Mouse Button]";
-        }
-        else
-        {
-            promptText.text = "";
-        }
-        
     }
 
     private void DocumentLoadedCallback(JArray documents)
