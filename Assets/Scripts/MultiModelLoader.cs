@@ -121,11 +121,11 @@ public class MultiModelLoader : MonoBehaviour
             if (modelAddedToken != null)
             {
                 string modelAdded = modelAddedToken["booleanValue"].ToString();
-                Debug.Log("Value of modelAdded variable: " + modelAdded);
+                //Debug.Log("Value of modelAdded variable: " + modelAdded);
 
                 if (modelAdded == "True")
                 {
-                    Debug.Log("Model added");
+                    //Debug.Log("Model added");
                     // Increase size of array by 1 for each item that is viable
                     Array.Resize(ref docIdArray, ++arraySize);
 
