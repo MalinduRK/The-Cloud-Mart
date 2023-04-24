@@ -9,6 +9,8 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Newtonsoft.Json.Linq;
 using TMPro;
+using UnityEditor.Search;
+using Unity.VisualScripting;
 
 [System.Serializable]
 public class Item
@@ -31,7 +33,10 @@ public class MultiModelLoader : MonoBehaviour
     public string storageUrl = "https://firebasestorage.googleapis.com/v0/b/the-cloud-mart.appspot.com/o/";
     public string bucketPath = "models/";
     public string apiKey = "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC7KFInf0JYb+/Q";
+    // File paths
     public string localPath;
+    public string imagePath;
+    public string modelPath;
     // Create a parent object to hold all the downloaded objects
     public GameObject modelLoaderObject;
     public GameObject parentObject;
@@ -69,6 +74,7 @@ public class MultiModelLoader : MonoBehaviour
     public TextMeshProUGUI itemLength;
     public TextMeshProUGUI itemWidth;
     public TextMeshProUGUI itemHeight;
+    public Image itemImage;
 
     void Start()
     {
@@ -79,7 +85,9 @@ public class MultiModelLoader : MonoBehaviour
             firestoreReader.OnDocumentLoaded += DocumentLoadedCallback;
         }
 
-        localPath = $"{Application.persistentDataPath}/Files/Models/";
+        localPath = $"{Application.persistentDataPath}/Files";
+        imagePath = localPath + "/Images";
+        modelPath = localPath + "/Models";
 
         // Disable item panel on start
         itemPanel.SetActive(false);
@@ -138,6 +146,7 @@ public class MultiModelLoader : MonoBehaviour
                             itemLength.text = items[objectName].ItemLength.ToString();
                             itemWidth.text = items[objectName].ItemWidth.ToString();
                             itemHeight.text = items[objectName].ItemHeight.ToString();
+                            StartCoroutine(ShowImage(objectName));
                         }
 
                         // Open item panel
@@ -231,7 +240,7 @@ public class MultiModelLoader : MonoBehaviour
 
                     string modelFileExtension = "";
                     // Add extension value only if it is not null
-                    if (fields["imageFileExtension"]["stringValue"] != null)
+                    if (fields["modelFileExtension"]["stringValue"] != null)
                     {
                         modelFileExtension = fields["modelFileExtension"]["stringValue"].ToString();
                     }
@@ -382,18 +391,18 @@ public class MultiModelLoader : MonoBehaviour
         //Debug.Log(extension);
         string fileName = fileId + "_model." + extension;
         //Debug.Log(fileName);
-        string filePath = localPath + fileName;
+        string filePath = modelPath + fileName;
 
         // Check if the file already exists
         if (File.Exists(filePath))
         {
-            CustomDebug("File " + fileName + " already exists in " + localPath);
+            CustomDebug("File " + fileName + " already exists in " + modelPath);
         }
         else
         {
             // Download the file from Firebase Storage and save it to local storage
             UnityWebRequest www = UnityWebRequest.Get(storageUrl + "models%2F" + fileName + "?alt=media");
-            www.downloadHandler = new DownloadHandlerFile(localPath + fileName);
+            www.downloadHandler = new DownloadHandlerFile(modelPath + fileName);
             yield return www.SendWebRequest();
 
             if (www.result != UnityWebRequest.Result.Success)
@@ -402,11 +411,11 @@ public class MultiModelLoader : MonoBehaviour
                 yield break;
             }
 
-            CustomDebug("File " + fileName + " downloaded and saved to " + localPath);
+            CustomDebug("File " + fileName + " downloaded and saved to " + modelPath);
         }
 
         // Load the GLTF file using the GLTFUtility library
-        gltfObject = Importer.LoadFromFile(localPath + fileName);
+        gltfObject = Importer.LoadFromFile(modelPath + fileName);
 
         // Set the object's name to the file name (without extension)
         gltfObject.name = Path.GetFileNameWithoutExtension(fileId);
@@ -440,6 +449,56 @@ public class MultiModelLoader : MonoBehaviour
         // Set the text of the TextMeshPro component
         textMeshPro.text = $"Item Name: {items[fileId].ItemName}\nItem Description: {items[fileId].ItemDescription}\nItem Price: {items[fileId].ItemPrice}";
         */
+    }
+
+    IEnumerator ShowImage(string fileId)
+    {
+        if (items[fileId].ImageFileExtension == "")
+        {
+            // Refer the image that should display when a seller has not added any image
+            Sprite noImageSprite = Resources.Load<Sprite>("Images/NoImage");
+            // Set image
+            itemImage.sprite = noImageSprite;
+            yield break; // The function will stop here if there is no image
+        }
+
+        string extension = items[fileId].ImageFileExtension;
+        //Debug.Log(extension);
+        string fileName = fileId + "_image." + extension;
+        //Debug.Log(fileName);
+        string filePath = imagePath + fileName;
+
+        // Check if the file already exists
+        if (File.Exists(filePath))
+        {
+            CustomDebug("File " + fileName + " already exists in " + imagePath);
+        }
+        else
+        {
+            // Download the file from Firebase Storage and save it to local storage
+            UnityWebRequest www = UnityWebRequest.Get(storageUrl + "images%2F" + fileName + "?alt=media");
+            www.downloadHandler = new DownloadHandlerFile(imagePath + fileName);
+            yield return www.SendWebRequest();
+
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(www.error);
+                yield break;
+            }
+
+            CustomDebug("File " + fileName + " downloaded and saved to " + imagePath);
+        }
+
+        // Read the image data from file
+        byte[] imageData = File.ReadAllBytes(imagePath + fileName);
+
+        // Create a new texture and load the image data into it
+        Texture2D texture = new Texture2D(2, 2);
+        texture.LoadImage(imageData);
+
+        // Create a new sprite from the texture and set it on the Image UI element
+        Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+        itemImage.sprite = sprite;
     }
 
     private void CustomDebug(string message)
