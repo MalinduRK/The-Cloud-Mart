@@ -54,6 +54,11 @@ public class MultiModelLoader : MonoBehaviour
     Dictionary<string, ItemDataStore> items = new Dictionary<string, ItemDataStore>();
     private bool firestoreDataLoaded = false;
 
+    // Item panel
+    public GameObject itemPanel;
+    // Check if the item panel is open
+    public bool isItemPanelOpen;
+
     void Start()
     {
         ItemDataLoader firestoreReader = FindObjectOfType<ItemDataLoader>();
@@ -64,6 +69,9 @@ public class MultiModelLoader : MonoBehaviour
         }
 
         localPath = $"{Application.persistentDataPath}/Files/Models/";
+
+        // Disable item panel on start
+        itemPanel.SetActive(false);
     }
 
     private void Update()
@@ -94,10 +102,25 @@ public class MultiModelLoader : MonoBehaviour
             else if (Physics.Raycast(ray, out hit, maxDistance) && hit.collider.transform.parent != null && hit.collider.transform.parent.gameObject.name == "Items")
             {
                 promptText.text = "View details\n[Left Mouse Button]";
+                if (Mouse.current.leftButton.wasPressedThisFrame)
+                {
+                    CustomDebug("Mouse button pressed");
+                    if (isItemPanelOpen)
+                    {
+                        itemPanel.SetActive(false);
+                        isItemPanelOpen = false;
+                    }
+                    else
+                    {
+                        itemPanel.SetActive(true);
+                        isItemPanelOpen = true;
+                    }
+                }
             }
             else
             {
                 promptText.text = "";
+                itemPanel.SetActive(false);
             }
         }
     }
