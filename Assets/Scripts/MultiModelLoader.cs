@@ -63,6 +63,12 @@ public class MultiModelLoader : MonoBehaviour
     // Check if the item panel is open
     public bool isItemPanelOpen;
     public TextMeshProUGUI itemName; // Using TextMeshPro works only for 3D rendered texts
+    public TextMeshProUGUI itemDescription;
+    public TextMeshProUGUI itemPrice;
+    public TextMeshProUGUI sellerName;
+    public TextMeshProUGUI itemLength;
+    public TextMeshProUGUI itemWidth;
+    public TextMeshProUGUI itemHeight;
 
     void Start()
     {
@@ -126,6 +132,12 @@ public class MultiModelLoader : MonoBehaviour
                         {
                             // Display item values
                             itemName.text = items[objectName].ItemName;
+                            itemDescription.text = items[objectName].ItemDescription;
+                            itemPrice.text = items[objectName].ItemPrice.ToString();
+                            sellerName.text = items[objectName].SellerName;
+                            itemLength.text = items[objectName].ItemLength.ToString();
+                            itemWidth.text = items[objectName].ItemWidth.ToString();
+                            itemHeight.text = items[objectName].ItemHeight.ToString();
                         }
 
                         // Open item panel
@@ -138,6 +150,7 @@ public class MultiModelLoader : MonoBehaviour
             {
                 promptText.text = "";
                 itemPanel.SetActive(false);
+                isItemPanelOpen = false;
             }
         }
     }
@@ -192,6 +205,7 @@ public class MultiModelLoader : MonoBehaviour
                     float itemPrice = (float)fields["itemPrice"]["integerValue"];
                     string sellerName = fields["sellerName"]["stringValue"].ToString();
 
+                    /*
                     float itemLength = 0.0f;
                     float itemWidth = 0.0f;
                     float itemHeight = 0.0f;
@@ -202,6 +216,11 @@ public class MultiModelLoader : MonoBehaviour
                         itemWidth = (float)fields["itemWidth"]["integerValue"];
                         itemHeight = (float)fields["itemHeight"]["integerValue"];
                     }
+                    */
+
+                    float itemLength = (float)fields["itemLength"]["integerValue"];
+                    float itemWidth = (float)fields["itemWidth"]["integerValue"];
+                    float itemHeight = (float)fields["itemHeight"]["integerValue"];
 
                     string imageFileExtension = "";
                     // Add extension value only if it is not null
