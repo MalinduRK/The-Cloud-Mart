@@ -453,14 +453,19 @@ public class MultiModelLoader : MonoBehaviour
 
     IEnumerator ShowImage(string fileId)
     {
+        /*
         if (items[fileId].ImageFileExtension == "")
         {
+            Debug.Log("Loading placeholder image");
             // Refer the image that should display when a seller has not added any image
-            Sprite noImageSprite = Resources.Load<Sprite>("Images/NoImage");
+            Sprite noImageSprite = Resources.Load<Sprite>("Images/NoImage.jpg");
             // Set image
             itemImage.sprite = noImageSprite;
             yield break; // The function will stop here if there is no image
         }
+        */
+
+        Debug.Log("Loading image");
 
         string extension = items[fileId].ImageFileExtension;
         //Debug.Log(extension);
