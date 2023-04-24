@@ -918,7 +918,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000015259, y: -155}
+  m_AnchoredPosition: {x: -0.000015259, y: -276}
   m_SizeDelta: {x: 524.401, y: 71.12}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &457510327
@@ -1202,13 +1202,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1124931328}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 1124931329}
+        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+        m_MethodName: Settings
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2027,7 +2027,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -116}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &896665918
@@ -2736,8 +2736,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8aac678112fa0744582ff50e9391d381, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debug: 1
   pauseMenu: {fileID: 642956510}
   settingsMenu: {fileID: 723396076}
+  isCursorLocked: 0
 --- !u!4 &1124931331
 Transform:
   m_ObjectHideFlags: 0
