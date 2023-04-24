@@ -8,6 +8,7 @@ using System;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Newtonsoft.Json.Linq;
+using TMPro;
 
 [System.Serializable]
 public class Item
@@ -25,7 +26,8 @@ public class ItemList
 
 public class MultiModelLoader : MonoBehaviour
 {
-    public bool debug;
+    public bool customDebug;
+    public bool buttonPressDebug;
     public string storageUrl = "https://firebasestorage.googleapis.com/v0/b/the-cloud-mart.appspot.com/o/";
     public string bucketPath = "models/";
     public string apiKey = "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC7KFInf0JYb+/Q";
@@ -49,15 +51,18 @@ public class MultiModelLoader : MonoBehaviour
     public GameObject buttonObject;
 
     // Firestore data
+    //
     public ItemDataStore dataStore;
     // Dictionary for storing all firestore data with the respective item ID
     Dictionary<string, ItemDataStore> items = new Dictionary<string, ItemDataStore>();
     private bool firestoreDataLoaded = false;
 
     // Item panel
+    //
     public GameObject itemPanel;
     // Check if the item panel is open
     public bool isItemPanelOpen;
+    public TextMeshProUGUI itemName; // Using TextMeshPro works only for 3D rendered texts
 
     void Start()
     {
@@ -94,7 +99,7 @@ public class MultiModelLoader : MonoBehaviour
                 promptText.text = "Load more items\n[Left Mouse Button]\n(" + pageNumber + "/" + totalPages + ")";
                 if (Mouse.current.leftButton.wasPressedThisFrame)
                 {
-                    CustomDebug("Mouse button pressed");
+                    ButtonPressDebug("Left Mouse Button");
                     StartCoroutine(LoadFiles());
                 }
             }
@@ -104,7 +109,7 @@ public class MultiModelLoader : MonoBehaviour
                 promptText.text = "View details\n[Left Mouse Button]";
                 if (Mouse.current.leftButton.wasPressedThisFrame)
                 {
-                    CustomDebug("Mouse button pressed");
+                    ButtonPressDebug("Left Mouse Button");
                     if (isItemPanelOpen)
                     {
                         itemPanel.SetActive(false);
@@ -112,6 +117,18 @@ public class MultiModelLoader : MonoBehaviour
                     }
                     else
                     {
+                        // Get the name of the object that was clicked
+                        string objectName = hit.collider.gameObject.name;
+                        ButtonPressDebug("Object: " + objectName);
+
+                        // Find the dictionary item that aligns with the game object
+                        if (items.ContainsKey(objectName))
+                        {
+                            // Display item values
+                            itemName.text = items[objectName].ItemName;
+                        }
+
+                        // Open item panel
                         itemPanel.SetActive(true);
                         isItemPanelOpen = true;
                     }
@@ -408,9 +425,17 @@ public class MultiModelLoader : MonoBehaviour
 
     private void CustomDebug(string message)
     {
-        if (debug)
+        if (customDebug)
         {
             Debug.Log(message);
+        }
+    }
+
+    private void ButtonPressDebug(string message)
+    {
+        if (customDebug)
+        {
+            Debug.Log("Button pressed: " + message);
         }
     }
 }
