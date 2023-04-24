@@ -373,7 +373,7 @@ public class MultiModelLoader : MonoBehaviour
         gltfObject = Importer.LoadFromFile(localPath + fileName);
 
         // Set the object's name to the file name (without extension)
-        gltfObject.name = Path.GetFileNameWithoutExtension(fileName);
+        gltfObject.name = Path.GetFileNameWithoutExtension(fileId);
 
         // Set the parent object
         gltfObject.transform.SetParent(parentObject.transform);
