@@ -120,17 +120,25 @@ public class MultiModelLoader : MonoBehaviour
             // Check if the player is looking at a loaded item and take action
             else if (Physics.Raycast(ray, out hit, maxDistance) && hit.collider.transform.parent != null && hit.collider.transform.parent.gameObject.name == "Items")
             {
-                promptText.text = "View details\n[Left Mouse Button]";
+                if (!isItemPanelOpen)
+                {
+                    promptText.text = "View details\n[Left Mouse Button]";
+                }
+                
                 if (Mouse.current.leftButton.wasPressedThisFrame)
                 {
                     ButtonPressDebug("Left Mouse Button");
                     if (isItemPanelOpen)
                     {
+                        // Show button prompt when closing the panel
+                        promptText.text = "View details\n[Left Mouse Button]";
                         itemPanel.SetActive(false);
                         isItemPanelOpen = false;
                     }
                     else
                     {
+                        // Hide button prompt when the panel is open
+                        promptText.text = "";
                         // Get the name of the object that was clicked
                         string objectName = hit.collider.gameObject.name;
                         ButtonPressDebug("Object: " + objectName);
@@ -453,17 +461,15 @@ public class MultiModelLoader : MonoBehaviour
 
     IEnumerator ShowImage(string fileId)
     {
-        /*
         if (items[fileId].ImageFileExtension == "")
         {
-            Debug.Log("Loading placeholder image");
+            //Debug.Log("Loading placeholder image");
             // Refer the image that should display when a seller has not added any image
-            Sprite noImageSprite = Resources.Load<Sprite>("Images/NoImage.jpg");
+            //Sprite noImageSprite = Resources.Load<Sprite>("Images/NoImage.jpg");
             // Set image
-            itemImage.sprite = noImageSprite;
+            //itemImage.sprite = noImageSprite;
             yield break; // The function will stop here if there is no image
         }
-        */
 
         Debug.Log("Loading image");
 
