@@ -54,6 +54,10 @@ public class MultiModelLoader : MonoBehaviour
     Dictionary<string, ItemDataStore> items = new Dictionary<string, ItemDataStore>();
     private bool firestoreDataLoaded = false;
 
+    // Item displays
+    private GameObject textObjectPrefab;
+    private TextMeshPro textMeshPro;
+
     void Start()
     {
         ItemDataLoader firestoreReader = FindObjectOfType<ItemDataLoader>();
@@ -64,6 +68,15 @@ public class MultiModelLoader : MonoBehaviour
         }
 
         localPath = $"{Application.persistentDataPath}/Files/Models/";
+
+        // Create the child object prefab with the TextMeshPro component
+        textObjectPrefab = new GameObject("TextMeshPro");
+        TextMeshPro textMeshPro = textObjectPrefab.AddComponent<TextMeshPro>();
+
+        // Set the textMeshPro properties as desired
+        textMeshPro.text = "Your Text Here";
+        textMeshPro.fontSize = 24f;
+        textMeshPro.color = Color.white;
     }
 
     private void Update()
@@ -373,6 +386,9 @@ public class MultiModelLoader : MonoBehaviour
 
         // Rotate the object as desired
         // gltfObject.transform.rotation = Quaternion.identity;
+
+        GameObject textObject = GameObject.Instantiate(textObjectPrefab);
+        textObject.transform.SetParent(gltfObject.transform);
 
         /*
         // Attach a TextMeshPro component to the game object
