@@ -497,7 +497,14 @@ public class MultiModelLoader : MonoBehaviour
         texture.LoadImage(imageData);
 
         // Create a new sprite from the texture and set it on the Image UI element
-        Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+        Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+
+        // Set the height of the Image UI element
+        RectTransform rectTransform = itemImage.GetComponent<RectTransform>();
+        float imageRatio = (float)texture.width / texture.height;
+        float height = rectTransform.rect.width / imageRatio;
+        rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+
         itemImage.sprite = sprite;
     }
 

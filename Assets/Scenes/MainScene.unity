@@ -3866,12 +3866,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37181d8b9206a574bb196a48c9a45586, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  customDebug: 0
-  buttonPressDebug: 0
+  customDebug: 1
+  buttonPressDebug: 1
   storageUrl: https://firebasestorage.googleapis.com/v0/b/the-cloud-mart.appspot.com/o/
   bucketPath: models/
   apiKey: MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC7KFInf0JYb+/Q
   localPath: Assets/Models/
+  imagePath: 
+  modelPath: 
   modelLoaderObject: {fileID: 1211012665}
   parentObject: {fileID: 231420074}
   promptText: {fileID: 273343753}
