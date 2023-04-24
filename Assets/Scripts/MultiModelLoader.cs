@@ -8,6 +8,7 @@ using System;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Newtonsoft.Json.Linq;
+using TMPro;
 
 [System.Serializable]
 public class Item
