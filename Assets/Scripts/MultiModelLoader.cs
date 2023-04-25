@@ -9,6 +9,8 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Newtonsoft.Json.Linq;
 using TMPro;
+using UnityEditor.Search;
+using Unity.VisualScripting;
 
 [System.Serializable]
 public class Item
@@ -26,11 +28,15 @@ public class ItemList
 
 public class MultiModelLoader : MonoBehaviour
 {
-    public bool debug;
+    public bool customDebug;
+    public bool buttonPressDebug;
     public string storageUrl = "https://firebasestorage.googleapis.com/v0/b/the-cloud-mart.appspot.com/o/";
     public string bucketPath = "models/";
     public string apiKey = "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC7KFInf0JYb+/Q";
+    // File paths
     public string localPath;
+    public string imagePath;
+    public string modelPath;
     // Create a parent object to hold all the downloaded objects
     public GameObject modelLoaderObject;
     public GameObject parentObject;
@@ -50,14 +56,25 @@ public class MultiModelLoader : MonoBehaviour
     public GameObject buttonObject;
 
     // Firestore data
+    //
     public ItemDataStore dataStore;
     // Dictionary for storing all firestore data with the respective item ID
     Dictionary<string, ItemDataStore> items = new Dictionary<string, ItemDataStore>();
     private bool firestoreDataLoaded = false;
 
-    // Item displays
-    private GameObject textObjectPrefab;
-    private TextMeshPro textMeshPro;
+    // Item panel
+    //
+    public GameObject itemPanel;
+    // Check if the item panel is open
+    public bool isItemPanelOpen;
+    public TextMeshProUGUI itemName; // Using TextMeshPro works only for 3D rendered texts
+    public TextMeshProUGUI itemDescription;
+    public TextMeshProUGUI itemPrice;
+    public TextMeshProUGUI sellerName;
+    public TextMeshProUGUI itemLength;
+    public TextMeshProUGUI itemWidth;
+    public TextMeshProUGUI itemHeight;
+    public Image itemImage;
 
     void Start()
     {
@@ -68,16 +85,12 @@ public class MultiModelLoader : MonoBehaviour
             firestoreReader.OnDocumentLoaded += DocumentLoadedCallback;
         }
 
-        localPath = $"{Application.persistentDataPath}/Files/Models/";
+        localPath = $"{Application.persistentDataPath}/Files";
+        imagePath = localPath + "/Images";
+        modelPath = localPath + "/Models";
 
-        // Create the child object prefab with the TextMeshPro component
-        textObjectPrefab = new GameObject("TextMeshPro");
-        TextMeshPro textMeshPro = textObjectPrefab.AddComponent<TextMeshPro>();
-
-        // Set the textMeshPro properties as desired
-        textMeshPro.text = "Your Text Here";
-        textMeshPro.fontSize = 24f;
-        textMeshPro.color = Color.white;
+        // Disable item panel on start
+        itemPanel.SetActive(false);
     }
 
     private void Update()
@@ -100,18 +113,61 @@ public class MultiModelLoader : MonoBehaviour
                 promptText.text = "Load more items\n[Left Mouse Button]\n(" + pageNumber + "/" + totalPages + ")";
                 if (Mouse.current.leftButton.wasPressedThisFrame)
                 {
-                    CustomDebug("Mouse button pressed");
+                    ButtonPressDebug("Left Mouse Button");
                     StartCoroutine(LoadFiles());
                 }
             }
             // Check if the player is looking at a loaded item and take action
             else if (Physics.Raycast(ray, out hit, maxDistance) && hit.collider.transform.parent != null && hit.collider.transform.parent.gameObject.name == "Items")
             {
-                promptText.text = "View details\n[Left Mouse Button]";
+                if (!isItemPanelOpen)
+                {
+                    promptText.text = "View details\n[Left Mouse Button]";
+                }
+                
+                if (Mouse.current.leftButton.wasPressedThisFrame)
+                {
+                    ButtonPressDebug("Left Mouse Button");
+                    if (isItemPanelOpen)
+                    {
+                        // Show button prompt when closing the panel
+                        promptText.text = "View details\n[Left Mouse Button]";
+                        itemPanel.SetActive(false);
+                        isItemPanelOpen = false;
+                    }
+                    else
+                    {
+                        // Hide button prompt when the panel is open
+                        promptText.text = "";
+                        // Get the name of the object that was clicked
+                        string objectName = hit.collider.gameObject.name;
+                        ButtonPressDebug("Object: " + objectName);
+
+                        // Find the dictionary item that aligns with the game object
+                        if (items.ContainsKey(objectName))
+                        {
+                            // Display item values
+                            itemName.text = items[objectName].ItemName;
+                            itemDescription.text = items[objectName].ItemDescription;
+                            itemPrice.text = items[objectName].ItemPrice.ToString();
+                            sellerName.text = items[objectName].SellerName;
+                            itemLength.text = items[objectName].ItemLength.ToString();
+                            itemWidth.text = items[objectName].ItemWidth.ToString();
+                            itemHeight.text = items[objectName].ItemHeight.ToString();
+                            StartCoroutine(ShowImage(objectName));
+                        }
+
+                        // Open item panel
+                        itemPanel.SetActive(true);
+                        isItemPanelOpen = true;
+                    }
+                }
             }
             else
             {
                 promptText.text = "";
+                itemPanel.SetActive(false);
+                isItemPanelOpen = false;
             }
         }
     }
@@ -166,6 +222,7 @@ public class MultiModelLoader : MonoBehaviour
                     float itemPrice = (float)fields["itemPrice"]["integerValue"];
                     string sellerName = fields["sellerName"]["stringValue"].ToString();
 
+                    /*
                     float itemLength = 0.0f;
                     float itemWidth = 0.0f;
                     float itemHeight = 0.0f;
@@ -176,6 +233,11 @@ public class MultiModelLoader : MonoBehaviour
                         itemWidth = (float)fields["itemWidth"]["integerValue"];
                         itemHeight = (float)fields["itemHeight"]["integerValue"];
                     }
+                    */
+
+                    float itemLength = (float)fields["itemLength"]["integerValue"];
+                    float itemWidth = (float)fields["itemWidth"]["integerValue"];
+                    float itemHeight = (float)fields["itemHeight"]["integerValue"];
 
                     string imageFileExtension = "";
                     // Add extension value only if it is not null
@@ -186,7 +248,7 @@ public class MultiModelLoader : MonoBehaviour
 
                     string modelFileExtension = "";
                     // Add extension value only if it is not null
-                    if (fields["imageFileExtension"]["stringValue"] != null)
+                    if (fields["modelFileExtension"]["stringValue"] != null)
                     {
                         modelFileExtension = fields["modelFileExtension"]["stringValue"].ToString();
                     }
@@ -337,18 +399,18 @@ public class MultiModelLoader : MonoBehaviour
         //Debug.Log(extension);
         string fileName = fileId + "_model." + extension;
         //Debug.Log(fileName);
-        string filePath = localPath + fileName;
+        string filePath = modelPath + fileName;
 
         // Check if the file already exists
         if (File.Exists(filePath))
         {
-            CustomDebug("File " + fileName + " already exists in " + localPath);
+            CustomDebug("File " + fileName + " already exists in " + modelPath);
         }
         else
         {
             // Download the file from Firebase Storage and save it to local storage
             UnityWebRequest www = UnityWebRequest.Get(storageUrl + "models%2F" + fileName + "?alt=media");
-            www.downloadHandler = new DownloadHandlerFile(localPath + fileName);
+            www.downloadHandler = new DownloadHandlerFile(modelPath + fileName);
             yield return www.SendWebRequest();
 
             if (www.result != UnityWebRequest.Result.Success)
@@ -357,14 +419,14 @@ public class MultiModelLoader : MonoBehaviour
                 yield break;
             }
 
-            CustomDebug("File " + fileName + " downloaded and saved to " + localPath);
+            CustomDebug("File " + fileName + " downloaded and saved to " + modelPath);
         }
 
         // Load the GLTF file using the GLTFUtility library
-        gltfObject = Importer.LoadFromFile(localPath + fileName);
+        gltfObject = Importer.LoadFromFile(modelPath + fileName);
 
         // Set the object's name to the file name (without extension)
-        gltfObject.name = Path.GetFileNameWithoutExtension(fileName);
+        gltfObject.name = Path.GetFileNameWithoutExtension(fileId);
 
         // Set the parent object
         gltfObject.transform.SetParent(parentObject.transform);
@@ -400,11 +462,79 @@ public class MultiModelLoader : MonoBehaviour
         */
     }
 
+    IEnumerator ShowImage(string fileId)
+    {
+        if (items[fileId].ImageFileExtension == "")
+        {
+            //Debug.Log("Loading placeholder image");
+            // Refer the image that should display when a seller has not added any image
+            //Sprite noImageSprite = Resources.Load<Sprite>("Images/NoImage.jpg");
+            // Set image
+            //itemImage.sprite = noImageSprite;
+            yield break; // The function will stop here if there is no image
+        }
+
+        Debug.Log("Loading image");
+
+        string extension = items[fileId].ImageFileExtension;
+        //Debug.Log(extension);
+        string fileName = fileId + "_image." + extension;
+        //Debug.Log(fileName);
+        string filePath = imagePath + fileName;
+
+        // Check if the file already exists
+        if (File.Exists(filePath))
+        {
+            CustomDebug("File " + fileName + " already exists in " + imagePath);
+        }
+        else
+        {
+            // Download the file from Firebase Storage and save it to local storage
+            UnityWebRequest www = UnityWebRequest.Get(storageUrl + "images%2F" + fileName + "?alt=media");
+            www.downloadHandler = new DownloadHandlerFile(imagePath + fileName);
+            yield return www.SendWebRequest();
+
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(www.error);
+                yield break;
+            }
+
+            CustomDebug("File " + fileName + " downloaded and saved to " + imagePath);
+        }
+
+        // Read the image data from file
+        byte[] imageData = File.ReadAllBytes(imagePath + fileName);
+
+        // Create a new texture and load the image data into it
+        Texture2D texture = new Texture2D(2, 2);
+        texture.LoadImage(imageData);
+
+        // Create a new sprite from the texture and set it on the Image UI element
+        Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+
+        // Set the height of the Image UI element
+        RectTransform rectTransform = itemImage.GetComponent<RectTransform>();
+        float imageRatio = (float)texture.width / texture.height;
+        float height = rectTransform.rect.width / imageRatio;
+        rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+
+        itemImage.sprite = sprite;
+    }
+
     private void CustomDebug(string message)
     {
-        if (debug)
+        if (customDebug)
         {
             Debug.Log(message);
+        }
+    }
+
+    private void ButtonPressDebug(string message)
+    {
+        if (customDebug)
+        {
+            Debug.Log("Button pressed: " + message);
         }
     }
 }

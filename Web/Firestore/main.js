@@ -96,12 +96,23 @@ form.addEventListener("submit", async function(event) {
     const imageFile = form.elements.image.files[0];
     const modelFile = form.elements.model.files[0];
 
-    // Extract the file extensions from the file name
-    const imageFileName = imageFile.name;
-    const imageFileExtension = imageFileName.substr(imageFileName.lastIndexOf('.') + 1);
+    // Placeholder image and model data
+    var imageFileName = "";
+    var imageFileExtension = "";
+    var modelFileName = "";
+    var modelFileExtension = "";
 
-    const modelFileName = modelFile.name;
-    const modelFileExtension = modelFileName.substr(modelFileName.lastIndexOf('.') + 1);
+    // Extract the file extensions from the file name
+    
+    if (imageCheck) {
+        imageFileName = imageFile.name;
+        imageFileExtension = imageFileName.substr(imageFileName.lastIndexOf('.') + 1);
+    }
+    
+    if (modelCheck) {
+        modelFileName = modelFile.name;
+        modelFileExtension = modelFileName.substr(modelFileName.lastIndexOf('.') + 1);
+    }
 
     // Create a new document in the "items" collection with the item data
     db.collection(category).add({
