@@ -450,9 +450,6 @@ public class MultiModelLoader : MonoBehaviour
         // Rotate the object as desired
         // gltfObject.transform.rotation = Quaternion.identity;
 
-        GameObject textObject = GameObject.Instantiate(textObjectPrefab);
-        textObject.transform.SetParent(gltfObject.transform);
-
         /*
         // Attach a TextMeshPro component to the game object
         TextMeshPro textMeshPro = gltfObject.AddComponent<TextMeshPro>();
