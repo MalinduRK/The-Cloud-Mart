@@ -9,8 +9,6 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Newtonsoft.Json.Linq;
 using TMPro;
-using UnityEditor.Search;
-using Unity.VisualScripting;
 
 [System.Serializable]
 public class Item
@@ -37,7 +35,7 @@ public class MultiModelLoader : MonoBehaviour
     public string localPath;
     public string imagePath;
     public string modelPath;
-    public string collectionName;
+    public string category;
     // Create a parent object to hold all the downloaded objects
     public GameObject modelLoaderObject;
     public GameObject parentObject;
@@ -84,12 +82,14 @@ public class MultiModelLoader : MonoBehaviour
         // Subscribe to the loader event from ItemDataLoader
         if (firestoreReader != null)
         {
-            firestoreReader.OnDocumentLoaded += DocumentLoadedCallback;
+            //firestoreReader.OnDocumentLoaded += DocumentLoadedCallback;
         }
 
         localPath = $"{Application.persistentDataPath}/Files/";
         imagePath = localPath + "Images/";
         modelPath = localPath + "Models/";
+
+        ReadData();
 
         // Disable item panel on start
         itemPanel.SetActive(false);
@@ -171,6 +171,117 @@ public class MultiModelLoader : MonoBehaviour
                 itemPanel.SetActive(false);
                 isItemPanelOpen = false;
             }
+        }
+    }
+
+    private void ReadData()
+    {
+        string filePath = $"{Application.persistentDataPath}/Files/json/{category}/{category}.json"; // Replace with the file path where you saved the JSON file earlier
+
+        // Read the contents of the JSON file
+        string jsonContent = File.ReadAllText(filePath);
+
+        // Parse the JSON content into a JObject
+        JObject jsonObject = JObject.Parse(jsonContent);
+        JArray documents = (JArray)jsonObject["documents"];
+
+        // Initialize an array of document ids
+        string[] docIdArray = new string[0];
+        int arraySize = 0;
+        int counter = 0;
+
+        foreach (JToken document in documents)
+        {
+            // Extract field values from the "fields" JObject
+            JObject fields = (JObject)document["fields"];
+            // Get the modelAdded boolean value from the data
+            JToken modelAddedToken = fields["modelAdded"];
+            if (modelAddedToken != null)
+            {
+                string modelAdded = modelAddedToken["booleanValue"].ToString();
+                //Debug.Log("Value of modelAdded variable: " + modelAdded);
+
+                if (modelAdded == "True")
+                {
+                    //Debug.Log("Model added");
+                    // Increase size of array by 1 for each item that is viable
+                    Array.Resize(ref docIdArray, ++arraySize);
+
+                    // Get the filepath of the document in firebase
+                    string documentUrl = document["name"].ToString();
+
+                    // Split the path into an array to isolate the document id
+                    string[] urlSplitArray = documentUrl.Split('/');
+
+                    // Take the array size in order to read the last item in the array, which is the document id
+                    int urlSplitArraySize = urlSplitArray.Length;
+
+                    // Put the document id into a variable
+                    string documentId = urlSplitArray[urlSplitArraySize - 1];
+                    //CustomDebug(documentId);
+
+                    // Add the document id to the array to be sent to the datastore
+                    docIdArray[counter++] = documentId;
+
+
+                    // Put all data into separate variables
+                    string itemName = fields["itemName"]["stringValue"].ToString();
+                    string itemDescription = fields["itemDescription"]["stringValue"].ToString();
+                    float itemPrice = (float)fields["itemPrice"]["integerValue"];
+                    string sellerName = fields["sellerName"]["stringValue"].ToString();
+
+                    /*
+                    float itemLength = 0.0f;
+                    float itemWidth = 0.0f;
+                    float itemHeight = 0.0f;
+                    // Add database values only if none of the dimensions are null
+                    if (fields["itemLength"]["integerValue"] != null && fields["itemWidth"]["integerValue"] != null && fields["itemHeight"]["integerValue"] != null)
+                    {
+                        itemLength = (float)fields["itemLength"]["integerValue"];
+                        itemWidth = (float)fields["itemWidth"]["integerValue"];
+                        itemHeight = (float)fields["itemHeight"]["integerValue"];
+                    }
+                    */
+
+                    float itemLength = (float)fields["itemLength"]["integerValue"];
+                    float itemWidth = (float)fields["itemWidth"]["integerValue"];
+                    float itemHeight = (float)fields["itemHeight"]["integerValue"];
+
+                    string imageFileExtension = "";
+                    // Add extension value only if it is not null
+                    if (fields["imageFileExtension"]["stringValue"] != null)
+                    {
+                        imageFileExtension = fields["imageFileExtension"]["stringValue"].ToString();
+                    }
+
+                    string modelFileExtension = "";
+                    // Add extension value only if it is not null
+                    if (fields["modelFileExtension"]["stringValue"] != null)
+                    {
+                        modelFileExtension = fields["modelFileExtension"]["stringValue"].ToString();
+                    }
+
+                    // Add all the document data to the items dictionary, using the data model class ItemDataStore
+                    items.Add(documentId, new ItemDataStore
+                    {
+                        ItemName = itemName,
+                        ItemDescription = itemDescription,
+                        ItemPrice = itemPrice,
+                        SellerName = sellerName,
+                        ItemLength = itemLength,
+                        ItemWidth = itemWidth,
+                        ItemHeight = itemHeight,
+                        ImageFileExtension = imageFileExtension,
+                        ModelFileExtension = modelFileExtension
+                    });
+                }
+            }
+        }
+
+        if (docIdArray.Length > 0)
+        {
+            CustomDebug($"Number of documents: {docIdArray.Length}");
+            PaginateItems(docIdArray);
         }
     }
 
@@ -401,7 +512,7 @@ public class MultiModelLoader : MonoBehaviour
         //Debug.Log(extension);
         string fileName = fileId + "_model." + extension;
         //Debug.Log(fileName);
-        string folderPath = modelPath + collectionName;
+        string folderPath = modelPath + category + "/";
         string filePath = folderPath + fileName;
 
         // Check if the file already exists

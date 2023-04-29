@@ -59,9 +59,6 @@ public class ItemDataLoader : MonoBehaviour
 
                     string filePath = System.IO.Path.Combine(folderPath, fileName); // Combine the folder path and file name to get the full file path
 
-                    // Save the response JSON to a file
-                    System.IO.File.WriteAllText(filePath, responseJson);
-
                     JObject response = JObject.Parse(responseJson);
                     JArray documents = (JArray)response["documents"];
                     //CustomDebug(documents.ToString());
@@ -69,6 +66,8 @@ public class ItemDataLoader : MonoBehaviour
                     if (documents != null)
                     {
                         //OnDocumentLoaded(documents);
+                        // Save the response JSON to a file
+                        System.IO.File.WriteAllText(filePath, responseJson);
                     }
 
                     //CustomDebug("No. of documents: " + documents.Count.ToString());
