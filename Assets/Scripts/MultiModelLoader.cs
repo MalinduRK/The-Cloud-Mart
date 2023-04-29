@@ -37,6 +37,7 @@ public class MultiModelLoader : MonoBehaviour
     public string localPath;
     public string imagePath;
     public string modelPath;
+    public string collectionName;
     // Create a parent object to hold all the downloaded objects
     public GameObject modelLoaderObject;
     public GameObject parentObject;
@@ -47,8 +48,9 @@ public class MultiModelLoader : MonoBehaviour
     private int totalPages = 0;
     // Loaded models
     private GameObject gltfObject;
+
+    // Loading more items
     //
-    // Variables related to loading more items
     public Text promptText;
     public Camera mainCamera;
     // Distance where the text prompt is triggered
@@ -85,9 +87,9 @@ public class MultiModelLoader : MonoBehaviour
             firestoreReader.OnDocumentLoaded += DocumentLoadedCallback;
         }
 
-        localPath = $"{Application.persistentDataPath}/Files";
-        imagePath = localPath + "/Images";
-        modelPath = localPath + "/Models";
+        localPath = $"{Application.persistentDataPath}/Files/";
+        imagePath = localPath + "Images/";
+        modelPath = localPath + "Models/";
 
         // Disable item panel on start
         itemPanel.SetActive(false);
@@ -399,18 +401,19 @@ public class MultiModelLoader : MonoBehaviour
         //Debug.Log(extension);
         string fileName = fileId + "_model." + extension;
         //Debug.Log(fileName);
-        string filePath = modelPath + fileName;
+        string folderPath = modelPath + collectionName;
+        string filePath = folderPath + fileName;
 
         // Check if the file already exists
         if (File.Exists(filePath))
         {
-            CustomDebug("File " + fileName + " already exists in " + modelPath);
+            CustomDebug("File " + fileName + " already exists in " + folderPath);
         }
         else
         {
             // Download the file from Firebase Storage and save it to local storage
             UnityWebRequest www = UnityWebRequest.Get(storageUrl + "models%2F" + fileName + "?alt=media");
-            www.downloadHandler = new DownloadHandlerFile(modelPath + fileName);
+            www.downloadHandler = new DownloadHandlerFile(filePath);
             yield return www.SendWebRequest();
 
             if (www.result != UnityWebRequest.Result.Success)
@@ -419,11 +422,11 @@ public class MultiModelLoader : MonoBehaviour
                 yield break;
             }
 
-            CustomDebug("File " + fileName + " downloaded and saved to " + modelPath);
+            CustomDebug("File " + fileName + " downloaded and saved to " + folderPath);
         }
 
         // Load the GLTF file using the GLTFUtility library
-        gltfObject = Importer.LoadFromFile(modelPath + fileName);
+        gltfObject = Importer.LoadFromFile(filePath);
 
         // Set the object's name to the file name (without extension)
         gltfObject.name = Path.GetFileNameWithoutExtension(fileId);
@@ -465,9 +468,9 @@ public class MultiModelLoader : MonoBehaviour
         {
             //Debug.Log("Loading placeholder image");
             // Refer the image that should display when a seller has not added any image
-            //Sprite noImageSprite = Resources.Load<Sprite>("Images/NoImage.jpg");
+            Sprite noImageSprite = Resources.Load<Sprite>("Images/NoImage.jpg");
             // Set image
-            //itemImage.sprite = noImageSprite;
+            itemImage.sprite = noImageSprite;
             yield break; // The function will stop here if there is no image
         }
 

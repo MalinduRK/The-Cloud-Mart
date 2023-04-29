@@ -8,6 +8,7 @@ public class ItemDataLoader : MonoBehaviour
 {
     public bool debug;
     public ItemDataStore dataStore;
+    public string collectionName;
     // This is a C# event
     public event Action<JArray> OnDocumentLoaded;
 
@@ -26,7 +27,7 @@ public class ItemDataLoader : MonoBehaviour
     IEnumerator retrieveFromDatabase()
     {
         // Construct the URL for the Firestore document
-        string url = $"https://firestore.googleapis.com/v1/projects/the-cloud-mart/databases/(default)/documents/other/";
+        string url = $"https://firestore.googleapis.com/v1/projects/the-cloud-mart/databases/(default)/documents/" + collectionName + "/";
 
         using (UnityWebRequest www = UnityWebRequest.Get(url))
         {
