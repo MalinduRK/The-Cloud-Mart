@@ -88,9 +88,28 @@ form.addEventListener("submit", async function(event) {
     
     // Model values
     var modelCheck = modelCheckbox.checked;
-    var length = parseFloat(itemLength.value);;
-    var width = parseFloat(itemWidth.value);
-    var height = parseFloat(itemHeight.value);
+    // Get the values as string
+    var lengthValue = itemLength.value;
+    var widthValue = itemWidth.value;
+    var heightValue = itemHeight.value;
+    // Set the values into float
+    var length, width, height;
+    // Set values to 0 if they are empty
+    if (lengthValue == null || lengthValue =="" || isNaN(lengthValue)) {
+        length = 0;
+    } else {
+        length = parseFloat(itemLength.value);
+    }
+    if (widthValue == null || widthValue =="" || isNaN(widthValue)) {
+        width = 0;
+    } else {
+        width = parseFloat(itemWidth.value);
+    }
+    if (heightValue == null || heightValue =="" || isNaN(heightValue)) {
+        height = 0;
+    } else {
+        height = parseFloat(itemHeight.value);
+    }
 
     // Image or model file
     const imageFile = form.elements.image.files[0];

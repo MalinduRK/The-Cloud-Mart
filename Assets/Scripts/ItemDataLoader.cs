@@ -8,9 +8,10 @@ public class ItemDataLoader : MonoBehaviour
 {
     public bool debug;
     public ItemDataStore dataStore;
-    public string collectionName;
     // This is a C# event
     public event Action<JArray> OnDocumentLoaded;
+    // An array to loop through all categories in the firestore database
+    private string[] categories = { "sofa", "chair", "bed", "cupboard", "other" };
 
     // Start is called before the first frame update
     void Start()
@@ -26,32 +27,43 @@ public class ItemDataLoader : MonoBehaviour
 
     IEnumerator retrieveFromDatabase()
     {
-        // Construct the URL for the Firestore document
-        string url = $"https://firestore.googleapis.com/v1/projects/the-cloud-mart/databases/(default)/documents/" + collectionName + "/";
-
-        using (UnityWebRequest www = UnityWebRequest.Get(url))
+        // Loop through the array of categories and save a separate json file for each category
+        for (int i = 0; i < categories.Length; i++)
         {
-            yield return www.SendWebRequest();
+            string category = categories[i];
 
-            if (www.result != UnityWebRequest.Result.Success)
-            {
-                CustomDebug(www.error);
-            }
-            else
-            {
-                Debug.Log("Retrieving from firestore");
-                // Parse the response JSON and put each document into a separate variable
-                string responseJson = www.downloadHandler.text;
-                JObject response = JObject.Parse(responseJson);
-                JArray documents = (JArray)response["documents"];
-                //CustomDebug(documents.ToString());
+            // Construct the URL for the Firestore document
+            string url = $"https://firestore.googleapis.com/v1/projects/the-cloud-mart/databases/(default)/documents/" + category + "/";
+            string filePath = $"{Application.persistentDataPath}/Files/json/{category}";
 
-                if (documents != null)
+            using (UnityWebRequest www = UnityWebRequest.Get(url))
+            {
+                yield return www.SendWebRequest();
+
+                if (www.result != UnityWebRequest.Result.Success)
                 {
-                    OnDocumentLoaded(documents);
+                    CustomDebug(www.error);
                 }
+                else
+                {
+                    Debug.Log("Retrieving from firestore");
+                    // Parse the response JSON and put each document into a separate variable
+                    string responseJson = www.downloadHandler.text;
 
-                //CustomDebug("No. of documents: " + documents.Count.ToString());
+                    // Save the response JSON to a file
+                    System.IO.File.WriteAllText(filePath, responseJson);
+
+                    JObject response = JObject.Parse(responseJson);
+                    JArray documents = (JArray)response["documents"];
+                    //CustomDebug(documents.ToString());
+
+                    if (documents != null)
+                    {
+                        OnDocumentLoaded(documents);
+                    }
+
+                    //CustomDebug("No. of documents: " + documents.Count.ToString());
+                }
             }
         }
     }
