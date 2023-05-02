@@ -61,12 +61,15 @@ public class MultiModelLoader : MonoBehaviour
     public ItemDataStore dataStore;
     // Dictionary for storing all firestore data with the respective item ID
     Dictionary<string, ItemDataStore> items = new Dictionary<string, ItemDataStore>();
-    private bool firestoreDataLoaded = false;
+    //private bool firestoreDataLoaded = false;
     // Item panel
     //
     public GameObject itemPanel;
     // Check if the item panel is open
-    public bool isItemPanelOpen;
+    public static bool isItemPanelOpen;
+    public bool isCursorLocked;
+    // Labels
+    //
     public TextMeshProUGUI itemName; // Using TextMeshPro works only for 3D rendered texts
     public TextMeshProUGUI itemDescription;
     public TextMeshProUGUI itemPrice;
@@ -93,16 +96,21 @@ public class MultiModelLoader : MonoBehaviour
 
         // Disable item panel on start
         itemPanel.SetActive(false);
+
+        // Lock the cursor to the center of the screen when it is invisible
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
     {
         ItemDataLoader firestoreReader = FindObjectOfType<ItemDataLoader>();
         // Check if the firestore data had loaded up and is ready
+        /*
         if (firestoreDataLoaded && dataStore != null)
         {
             firestoreReader.OnDocumentLoaded += DocumentLoadedCallback;
         }
+        */
 
         Ray ray = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
@@ -139,6 +147,12 @@ public class MultiModelLoader : MonoBehaviour
                     }
                     else
                     {
+                        // Enable the cursor
+                        Cursor.lockState = CursorLockMode.None;
+                        Cursor.visible = true;
+                        // Lock player movement
+                        PauseMenu.isPaused = true;
+
                         // Hide button prompt when the panel is open
                         promptText.text = "";
                         // Get the name of the object that was clicked
@@ -167,6 +181,12 @@ public class MultiModelLoader : MonoBehaviour
             }
             else
             {
+                // Disable the cursor
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+                // Unlock player movement
+                PauseMenu.isPaused = false;
+
                 promptText.text = "";
                 itemPanel.SetActive(false);
                 isItemPanelOpen = false;
@@ -285,6 +305,7 @@ public class MultiModelLoader : MonoBehaviour
         }
     }
 
+    /*
     private void DocumentLoadedCallback(JArray documents)
     {
         // Set the flag to indicate that the Firestore data has been loaded
@@ -347,6 +368,7 @@ public class MultiModelLoader : MonoBehaviour
                         itemHeight = (float)fields["itemHeight"]["integerValue"];
                     }
                     */
+    /*
 
                     float itemLength = (float)fields["itemLength"]["integerValue"];
                     float itemWidth = (float)fields["itemWidth"]["integerValue"];
@@ -388,6 +410,7 @@ public class MultiModelLoader : MonoBehaviour
             PaginateItems(docIdArray);
         }
     }
+        */
 
     void PaginateItems(string[] itemName)
     {
@@ -463,7 +486,7 @@ public class MultiModelLoader : MonoBehaviour
 
         // Set the scale of the parent object to perform correct positioning of the objects
         float parentX = 3;
-        float parentY = 1;
+        //float parentY = 1;
         float parentZ = 3;
 
         for (int i = 0; i < pages[page].Length; i++)

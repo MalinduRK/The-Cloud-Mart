@@ -16,6 +16,7 @@ public class PauseMenu : MonoBehaviour
         pauseMenu.SetActive(false);
         settingsMenu.SetActive(false);
 
+        isPaused = false;
         isCursorLocked = true;
         //Make the cursor invisible
         Cursor.lockState = isCursorLocked ? CursorLockMode.Locked : CursorLockMode.None;
@@ -25,7 +26,7 @@ public class PauseMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && !MultiModelLoader.isItemPanelOpen)
         {
             ButtonPressDebug("Esc");
             if (!isPaused)
