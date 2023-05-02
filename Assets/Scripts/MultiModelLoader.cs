@@ -32,6 +32,7 @@ public class MultiModelLoader : MonoBehaviour
     public string bucketPath = "models/";
     public string apiKey = "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC7KFInf0JYb+/Q";
     // File paths
+    //
     public string localPath;
     public string imagePath;
     public string modelPath;
@@ -44,9 +45,10 @@ public class MultiModelLoader : MonoBehaviour
     // Keep track of page number in display
     private int pageNumber = 0;
     private int totalPages = 0;
-    // Loaded models
+    // Loading models
+    //
     private GameObject gltfObject;
-
+    public bool inverseLoad;
     // Loading more items
     //
     public Text promptText;
@@ -54,14 +56,12 @@ public class MultiModelLoader : MonoBehaviour
     // Distance where the text prompt is triggered
     public float maxDistance = 2.5f;
     public GameObject buttonObject;
-
     // Firestore data
     //
     public ItemDataStore dataStore;
     // Dictionary for storing all firestore data with the respective item ID
     Dictionary<string, ItemDataStore> items = new Dictionary<string, ItemDataStore>();
     private bool firestoreDataLoaded = false;
-
     // Item panel
     //
     public GameObject itemPanel;
@@ -472,23 +472,48 @@ public class MultiModelLoader : MonoBehaviour
             // Counter to get the positions of loaded items
             int counter = i + 1;
 
-            switch (counter)
+            // Change positioning if the items are loaded on the left side of the mart
+            if (inverseLoad)
             {
-                case 1:
-                    position += new Vector3(0 * parentX, 0 * parentY, 0 * parentZ);
-                    break;
-                case 2:
-                    position += new Vector3(0 * parentX, 0 * parentY, (float)(1.5 * parentZ));
-                    break;
-                case 3:
-                    position += new Vector3((float)(1.5 * parentX), 0 * parentY, 0 * parentZ);
-                    break;
-                case 4:
-                    position += new Vector3(0 * parentX, 0 * parentY, (float)(-1.5 * parentZ));
-                    break;
-                default:
-                    Debug.Log("Wrong counter in switch statement!");
-                    yield break;
+                switch (counter)
+                {
+                    case 1:
+                        position += new Vector3(0, 0, 0);
+                        break;
+                    case 2:
+                        position += new Vector3(0, 0, (float)(-1.5 * parentZ));
+                        break;
+                    case 3:
+                        position += new Vector3((float)(-1.5 * parentX), 0, 0);
+                        break;
+                    case 4:
+                        position += new Vector3(0, 0, (float)(1.5 * parentZ));
+                        break;
+                    default:
+                        Debug.Log("Wrong counter in switch statement!");
+                        yield break;
+                }
+            }
+            else
+            {
+                switch (counter)
+                {
+                    case 1:
+                        position += new Vector3(0, 0, 0);
+                        break;
+                    case 2:
+                        position += new Vector3(0, 0, (float)(1.5 * parentZ));
+                        break;
+                    case 3:
+                        position += new Vector3((float)(1.5 * parentX), 0, 0);
+                        break;
+                    case 4:
+                        position += new Vector3(0, 0, (float)(-1.5 * parentZ));
+                        break;
+                    default:
+                        Debug.Log("Wrong counter in switch statement!");
+                        yield break;
+                }
             }
 
             StartCoroutine(DownloadAndSaveFile(pages[page][i], position));
