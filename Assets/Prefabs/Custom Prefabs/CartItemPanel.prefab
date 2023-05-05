@@ -492,6 +492,7 @@ GameObject:
   - component: {fileID: 5721685577847335151}
   - component: {fileID: 8555395182979136606}
   - component: {fileID: 6417191325401001436}
+  - component: {fileID: -6908967204064338103}
   m_Layer: 5
   m_Name: CartItemPanel
   m_TagString: Untagged
@@ -562,6 +563,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &-6908967204064338103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5263572086584069387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5074a626fca13f4a9080d0fbf2584bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: {fileID: 8564090562526207910}
+  seller: {fileID: 626127243715355655}
+  price: {fileID: 4785336565935058036}
+  image: {fileID: 6599933410755761516}
 --- !u!1 &7598375348163574118
 GameObject:
   m_ObjectHideFlags: 0

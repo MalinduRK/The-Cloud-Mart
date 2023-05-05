@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CartPanelController : MonoBehaviour
 {
+    public bool customDebug;
     public bool buttonDebug;
     public GameObject cartMenu;
     // Scroll view
@@ -36,6 +37,7 @@ public class CartPanelController : MonoBehaviour
     public void OpenPanel()
     {
         isCartPanelOpen = true;
+        ReadCart();
         // Enable mouse
         GameState.ShowCursor();
         // Disable camera and player movement
@@ -58,6 +60,8 @@ public class CartPanelController : MonoBehaviour
 
     public void ReadCart()
     {
+        CustomDebug("Reading cart");
+
         // Read item Ids from cart list
         List<string> cart = ItemDetailsPanelController.cart;
 
@@ -103,6 +107,14 @@ public class CartPanelController : MonoBehaviour
             GameObject item = Instantiate(itemPrefab, cartContent);
             CartItemLayout layout = item.GetComponent<CartItemLayout>();
             layout.Populate(cartItems[i]);
+        }
+    }
+
+    private void CustomDebug(string message)
+    {
+        if (customDebug)
+        {
+            Debug.Log(message);
         }
     }
 

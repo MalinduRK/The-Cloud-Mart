@@ -1,11 +1,12 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CartItemLayout : MonoBehaviour
 {
-    public Text itemName;
-    public Text seller;
-    public Text price;
+    public TextMeshProUGUI itemName;
+    public TextMeshProUGUI seller;
+    public TextMeshProUGUI price;
     public Image image;
 
     public void Populate(CartItem item)
