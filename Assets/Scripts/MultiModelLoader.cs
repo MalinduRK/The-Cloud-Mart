@@ -107,7 +107,7 @@ public class MultiModelLoader : MonoBehaviour
         Ray ray = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
         // Only work if the app isn't paused
-        if (!PauseMenu.isPaused)
+        if (!PauseMenuController.isPaused)
         {
             // Check if the player camera is looking at the said object
             if (Physics.Raycast(ray, out RaycastHit hit, maxDistance) && hit.collider.gameObject == buttonObject)
@@ -463,7 +463,7 @@ public class MultiModelLoader : MonoBehaviour
 
         // Set the scale of the parent object to perform correct positioning of the objects
         float parentX = 3;
-        float parentY = 1;
+        //float parentY = 1;
         float parentZ = 3;
 
         for (int i = 0; i < pages[page].Length; i++)

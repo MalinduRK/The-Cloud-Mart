@@ -114,7 +114,7 @@ namespace StarterAssets
 		{
 			// Manual check added. Remove if any conflicts arise with player movement
 			// Prevents user from moving around or jumping when paused
-			if(!PauseMenu.isPaused)
+			if(!PauseMenuController.isPaused)
 			{
                 JumpAndGravity();
                 GroundedCheck();
@@ -126,7 +126,7 @@ namespace StarterAssets
 		{
             // Manual check added. Remove if any conflicts arise with player movement
 			// Prevents camera look when paused
-            if (!PauseMenu.isPaused)
+            if (!PauseMenuController.isPaused)
 			{
                 CameraRotation();
             }
