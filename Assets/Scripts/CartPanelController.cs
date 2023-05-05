@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CartMenuController : MonoBehaviour
+public class CartPanelController : MonoBehaviour
 {
     public GameObject cartMenu;
 

@@ -92,7 +92,7 @@ public class MultiModelLoader : MonoBehaviour
         ReadData();
 
         // Disable item panel on start
-        itemPanel.SetActive(false);
+        //itemPanel.SetActive(false);
     }
 
     private void Update()
@@ -130,15 +130,7 @@ public class MultiModelLoader : MonoBehaviour
                 if (Mouse.current.leftButton.wasPressedThisFrame)
                 {
                     ButtonPressDebug("Left Mouse Button");
-                    if (isItemPanelOpen)
-                    {
-                        ExitPanel();
-                        // Show button prompt when closing the panel
-                        promptText.text = "View details\n[Left Mouse Button]";
-                        itemPanel.SetActive(false);
-                        isItemPanelOpen = false;
-                    }
-                    else
+                    if (!isItemPanelOpen)
                     {
                         EnterPanel();
                         // Hide button prompt when the panel is open
