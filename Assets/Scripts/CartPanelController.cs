@@ -64,6 +64,7 @@ public class CartPanelController : MonoBehaviour
 
         // Read item Ids from cart list
         List<string> cart = ItemDetailsPanelController.cart;
+        // Debug.Log("Cart count: " + cart.Count);
 
         // Instantiate new object from CartItem model
         cartItems = new List<CartItem>();
@@ -71,6 +72,7 @@ public class CartPanelController : MonoBehaviour
         // Instantiate item prefabs and populate with data
         for (int i = 0; i < cart.Count; i++)
         {
+            Debug.Log("Entered for loop");
             string name = "";
             string seller = "";
             string price = "";
@@ -79,6 +81,7 @@ public class CartPanelController : MonoBehaviour
             // Retrieve required values from the items dictionary
             if (MultiModelLoader.items.ContainsKey(cart[i]))
             {
+                Debug.Log($"MultiModelLoader contains {cart[i]}");
                 name = MultiModelLoader.items[cart[i]].ItemName;
                 seller = MultiModelLoader.items[cart[i]].SellerName;
                 price = MultiModelLoader.items[cart[i]].ItemPrice.ToString();
@@ -105,8 +108,17 @@ public class CartPanelController : MonoBehaviour
             cartItems.Add(new CartItem(name, seller, price, sprite));
 
             GameObject item = Instantiate(itemPrefab, cartContent);
-            CartItemLayout layout = item.GetComponent<CartItemLayout>();
-            layout.Populate(cartItems[i]);
+            //CartItemLayout layout = item.GetComponent<CartItemLayout>();
+            //layout.Populate(cartItems[i]);
+            if (item.TryGetComponent<CartItemLayout>(out CartItemLayout layout))
+            {
+                CustomDebug("Populating items");
+                layout.Populate(cartItems[i]);
+            }
+            else
+            {
+                CustomDebug("Cannot populate items");
+            }
         }
     }
 
