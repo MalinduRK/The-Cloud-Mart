@@ -60,7 +60,7 @@ public class MultiModelLoader : MonoBehaviour
     //
     public ItemDataStore dataStore;
     // Dictionary for storing all firestore data with the respective item ID
-    Dictionary<string, ItemDataStore> items = new Dictionary<string, ItemDataStore>();
+    public static Dictionary<string, ItemDataStore> items = new Dictionary<string, ItemDataStore>();
     private bool firestoreDataLoaded = false;
     // Item panel
     //

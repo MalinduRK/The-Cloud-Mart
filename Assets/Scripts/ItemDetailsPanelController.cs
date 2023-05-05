@@ -11,7 +11,7 @@ public class ItemDetailsPanelController : MonoBehaviour
     public GameObject itemDetailsPanel;
     public Text promptText;
     public TextMeshProUGUI cartText;
-    List<string> cart = new List<string>();
+    public static List<string> cart = new List<string>();
     // Raycast
     public Camera mainCamera;
     public float maxDistance = 2.5f;
