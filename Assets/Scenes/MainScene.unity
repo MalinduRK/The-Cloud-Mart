@@ -898,7 +898,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 1157373304}
+  m_Material: {fileID: 517101607}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -2633,7 +2633,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37181d8b9206a574bb196a48c9a45586, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  customDebug: 1
+  customDebug: 0
   buttonPressDebug: 1
   storageUrl: https://firebasestorage.googleapis.com/v0/b/the-cloud-mart.appspot.com/o/
   bucketPath: models/
@@ -3520,6 +3520,42 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 11467926}
   m_PrefabAsset: {fileID: 0}
+--- !u!21 &517101607
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: UI/RoundedCorners/RoundedCorners
+  m_Shader: {fileID: 4800000, guid: 0bd2ec5d73751e34a814274a454bec41, type: 3}
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _ColorMask: 15
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 0
+    m_Colors:
+    - _WidthHeightRadius: {r: 500, g: 350, b: 100, a: 0}
+  m_BuildTextureStacks: []
 --- !u!1 &518472337
 GameObject:
   m_ObjectHideFlags: 0
@@ -7014,10 +7050,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8aac678112fa0744582ff50e9391d381, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debug: 1
+  customDebug: 0
+  buttonDebug: 1
   pauseMenu: {fileID: 642956510}
   settingsMenu: {fileID: 723396076}
-  isCursorLocked: 0
 --- !u!4 &1124931331
 Transform:
   m_ObjectHideFlags: 0
@@ -7159,7 +7195,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37181d8b9206a574bb196a48c9a45586, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  customDebug: 1
+  customDebug: 0
   buttonPressDebug: 1
   storageUrl: https://firebasestorage.googleapis.com/v0/b/the-cloud-mart.appspot.com/o/
   bucketPath: models/
@@ -7295,42 +7331,6 @@ Transform:
   m_Father: {fileID: 901816361}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!21 &1157373304
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: UI/RoundedCorners/RoundedCorners
-  m_Shader: {fileID: 4800000, guid: 0bd2ec5d73751e34a814274a454bec41, type: 3}
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _ColorMask: 15
-    - _Stencil: 0
-    - _StencilComp: 8
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    - _UseUIAlphaClip: 0
-    m_Colors:
-    - _WidthHeightRadius: {r: 500, g: 350, b: 100, a: 0}
-  m_BuildTextureStacks: []
 --- !u!1 &1162960796
 GameObject:
   m_ObjectHideFlags: 0
@@ -7775,7 +7775,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37181d8b9206a574bb196a48c9a45586, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  customDebug: 1
+  customDebug: 0
   buttonPressDebug: 1
   storageUrl: https://firebasestorage.googleapis.com/v0/b/the-cloud-mart.appspot.com/o/
   bucketPath: models/
@@ -8282,7 +8282,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1124931329}
-        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+        m_TargetAssemblyTypeName: PauseMenuController, Assembly-CSharp
         m_MethodName: ResumeSession
         m_Mode: 1
         m_Arguments:
@@ -10280,7 +10280,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37181d8b9206a574bb196a48c9a45586, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  customDebug: 1
+  customDebug: 0
   buttonPressDebug: 1
   storageUrl: https://firebasestorage.googleapis.com/v0/b/the-cloud-mart.appspot.com/o/
   bucketPath: models/
