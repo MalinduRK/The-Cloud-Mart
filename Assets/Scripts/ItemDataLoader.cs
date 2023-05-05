@@ -9,7 +9,7 @@ public class ItemDataLoader : MonoBehaviour
     public bool debug;
     public ItemDataStore dataStore;
     // This is a C# event
-    public event Action<JArray> OnDocumentLoaded;
+    //public event Action<JArray> OnDocumentLoaded;
     // An array to loop through all categories in the firestore database
     private string[] categories = { "chair", "bed", "table", "other" };
 
@@ -47,7 +47,7 @@ public class ItemDataLoader : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("Retrieving from firestore");
+                    // Debug.Log("Retrieving from firestore");
                     // Parse the response JSON and put each document into a separate variable
                     string responseJson = www.downloadHandler.text;
 

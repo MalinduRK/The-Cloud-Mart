@@ -101,13 +101,13 @@ public class MultiModelLoader : MonoBehaviour
         // Check if the firestore data had loaded up and is ready
         if (firestoreDataLoaded && dataStore != null)
         {
-            firestoreReader.OnDocumentLoaded += DocumentLoadedCallback;
+            //firestoreReader.OnDocumentLoaded += DocumentLoadedCallback;
         }
 
         Ray ray = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
         // Only work if the app isn't paused
-        if (!PauseMenuController.isPaused)
+        if (!GameState.timeIsPaused)
         {
             // Check if the player camera is looking at the said object
             if (Physics.Raycast(ray, out RaycastHit hit, maxDistance) && hit.collider.gameObject == buttonObject)

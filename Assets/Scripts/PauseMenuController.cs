@@ -3,11 +3,10 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenuController : MonoBehaviour
 {
-    public bool debug;
+    public bool customDebug;
+    public bool buttonDebug;
     public GameObject pauseMenu;
     public GameObject settingsMenu;
-    public static bool isPaused; // It's made static in order for other functions to know that the app is paused
-    public bool isCursorLocked;
 
     // Start is called before the first frame update
     void Start()
@@ -15,11 +14,6 @@ public class PauseMenuController : MonoBehaviour
         // Disable the menus on start
         pauseMenu.SetActive(false);
         settingsMenu.SetActive(false);
-
-        isCursorLocked = true;
-        //Make the cursor invisible
-        Cursor.lockState = isCursorLocked ? CursorLockMode.Locked : CursorLockMode.None;
-        Cursor.visible = !isCursorLocked;
     }
 
     // Update is called once per frame
@@ -28,39 +22,39 @@ public class PauseMenuController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             ButtonPressDebug("Esc");
-            if (!isPaused)
+            if (!GameState.timeIsPaused)
             {
                 PauseSession();
-                //Make the cursor visible
-                isCursorLocked = false;
             }
             else
             {
                 ResumeSession();
-                //Make the cursor invisible
-                isCursorLocked = true;
             }
-            Cursor.lockState = isCursorLocked ? CursorLockMode.Locked : CursorLockMode.None;
-            Cursor.visible = !isCursorLocked;
         }
     }
 
     public void PauseSession()
     {
-        CustomDebug("Application paused");
+        // Pause session
+        GameState.PauseTime();
+        GameState.DisableCameraMovement();
+        GameState.DisablePlayerMovement();
+        // Make the cursor visible
+        GameState.ShowCursor();
+        // Show menu
         pauseMenu.SetActive(true);
-        // Pause the app in the background
-        Time.timeScale = 0f;
-        isPaused = true;
     }
 
     public void ResumeSession()
     {
-        CustomDebug("Application resumed");
+        // Resume session
+        GameState.ResumeTime();
+        GameState.EnableCameraMovement();
+        GameState.EnablePlayerMovement();
+        // Make the cursor invisible
+        GameState.HideCursor();
+        // Hide menu
         pauseMenu.SetActive(false);
-        // Resume the app
-        Time.timeScale = 1.0f;
-        isPaused = false;
     }
 
     public void Settings()
@@ -95,7 +89,7 @@ public class PauseMenuController : MonoBehaviour
 
     private void CustomDebug(string message)
     {
-        if (debug)
+        if (customDebug)
         {
             Debug.Log(message);
         }
@@ -103,7 +97,7 @@ public class PauseMenuController : MonoBehaviour
 
     private void ButtonPressDebug(string message)
     {
-        if (debug)
+        if (buttonDebug)
         {
             Debug.Log("Button pressed: " + message);
         }
