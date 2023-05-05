@@ -132,6 +132,7 @@ public class MultiModelLoader : MonoBehaviour
                     ButtonPressDebug("Left Mouse Button");
                     if (isItemPanelOpen)
                     {
+                        ExitPanel();
                         // Show button prompt when closing the panel
                         promptText.text = "View details\n[Left Mouse Button]";
                         itemPanel.SetActive(false);
@@ -139,6 +140,7 @@ public class MultiModelLoader : MonoBehaviour
                     }
                     else
                     {
+                        EnterPanel();
                         // Hide button prompt when the panel is open
                         promptText.text = "";
                         // Get the name of the object that was clicked
@@ -656,6 +658,24 @@ public class MultiModelLoader : MonoBehaviour
         rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
 
         itemImage.sprite = sprite;
+    }
+
+    public void EnterPanel()
+    {
+        // Enable mouse
+        GameState.ShowCursor();
+        // Disable camera and player movement
+        GameState.DisableCameraMovement();
+        GameState.DisablePlayerMovement();
+    }
+
+    public void ExitPanel()
+    {
+        // Disable mouse
+        GameState.HideCursor();
+        // Enable camera and player movement
+        GameState.EnableCameraMovement();
+        GameState.EnablePlayerMovement();
     }
 
     private void CustomDebug(string message)

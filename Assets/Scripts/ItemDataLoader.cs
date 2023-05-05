@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
 using Newtonsoft.Json.Linq;
-using System;
 
 public class ItemDataLoader : MonoBehaviour
 {

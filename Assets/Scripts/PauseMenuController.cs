@@ -68,7 +68,7 @@ public class PauseMenuController : MonoBehaviour
     {
         ButtonPressDebug("Quit to Main Menu");
         CustomDebug("Loading");
-        Time.timeScale = 1.0f;
+        GameState.ResumeTime();
         SceneManager.LoadScene("MainMenu");
     }
 
