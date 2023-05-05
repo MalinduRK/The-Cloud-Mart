@@ -13,7 +13,7 @@ public class CartItemLayout : MonoBehaviour
     {
         itemName.text = item.name;
         seller.text = item.seller;
-        price.text = item.price;
+        price.text = "Rs." + item.price;
         image.sprite = item.image;
     }
 }
