@@ -567,12 +567,12 @@ public class MultiModelLoader : MonoBehaviour
         // Set the parent object
         gltfObject.transform.SetParent(parentObject.transform);
 
-        // Calculate the bounding box of the model
-        Bounds bounds = gltfObject.GetComponentInChildren<MeshRenderer>().bounds;
+        // Calculate the bounding box of the model before scaling
+        Bounds preBounds = gltfObject.GetComponentInChildren<MeshRenderer>().bounds;
 
         // Calculate the scale factor needed to fit the bounding box within a desired size
         float desiredSize = 2f; // desired size in world units
-        float scaleFactor = desiredSize / bounds.size.magnitude;
+        float scaleFactor = desiredSize / preBounds.size.magnitude;
 
         // Apply the scale factor to the model
         gltfObject.transform.localScale *= scaleFactor;
@@ -583,40 +583,10 @@ public class MultiModelLoader : MonoBehaviour
         // Position the object in the scene as desired
         gltfObject.transform.position = position;
 
-        //
-        /* // Get the lowest point of the bounding box in world space
-        Vector3 lowestPoint = gltfObject.transform.TransformPoint(bounds.min);
-        Debug.Log($"Low point of object {gltfObject.name}: {lowestPoint.y}");
-
-        // Get the height of the ground at the object's position
-        MeshRenderer renderer = baseObject.GetComponent<MeshRenderer>();
-        Bounds baseBounds = renderer.bounds;
-        float groundHeight = baseBounds.size.y;
-        Debug.Log("Ground height: " + groundHeight);
-
-        // Calculate the offset needed to raise the object above the ground
-        float yOffset = groundHeight - lowestPoint.y;
-        Debug.Log("Offset: " + yOffset);
-
-        // Apply the offset to the object's position
-        gltfObject.transform.position += new Vector3(0f, yOffset, 0f); */
-        //
-       
-
-       /* gltfObject.AddComponent<Rigidbody>();
-
+        // Add gravity to the objects and let it place itself on the surface
+        gltfObject.AddComponent<Rigidbody>();
         gltfObject.GetComponent<Rigidbody>().isKinematic = false;
-        gltfObject.GetComponent<Rigidbody>().useGravity = true; */
-
-        /* RaycastHit hit;
-
-        Ray ray = new Ray(gltfObject.transform.position, Vector3.down);
-
-        if (Physics.Raycast(ray, out hit)) {
-            float yOffset = hit.point.y - gltfObject.transform.position.y;
-            gltfObject.transform.position += new Vector3(0f, yOffset, 0f);
-        } */
-
+        gltfObject.GetComponent<Rigidbody>().useGravity = true;
 
         // Rotate the object as desired
         // gltfObject.transform.rotation = Quaternion.identity;
