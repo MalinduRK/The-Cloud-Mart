@@ -62,6 +62,12 @@ public class CartPanelController : MonoBehaviour
     {
         CustomDebug("Reading cart");
 
+        // Clear previous items in the cart
+        foreach (Transform child in cartContent.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
         // Read item Ids from cart list
         List<string> cart = ItemDetailsPanelController.cart;
         // Debug.Log("Cart count: " + cart.Count);
