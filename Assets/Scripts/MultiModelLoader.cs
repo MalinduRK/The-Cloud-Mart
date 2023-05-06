@@ -580,6 +580,36 @@ public class MultiModelLoader : MonoBehaviour
         // Position the object in the scene as desired
         gltfObject.transform.position = position;
 
+        gltfObject.AddComponent<Rigidbody>();
+
+gltfObject.GetComponent<Rigidbody>().isKinematic = false;
+gltfObject.GetComponent<Rigidbody>().useGravity = true;
+
+
+        /* RaycastHit hit;
+
+        Ray ray = new Ray(gltfObject.transform.position, Vector3.down);
+
+        if (Physics.Raycast(ray, out hit)) {
+            float yOffset = hit.point.y - gltfObject.transform.position.y;
+            gltfObject.transform.position += new Vector3(0f, yOffset, 0f);
+        } */
+
+        //
+        /*
+        // Get the lowest point of the bounding box in world space
+        Vector3 lowestPoint = gltfObject.transform.TransformPoint(bounds.min);
+
+        // Get the height of the ground at the object's position
+        float groundHeight = 2.0f; //Terrain.activeTerrain.SampleHeight(gltfObject.transform.position);
+
+        // Calculate the offset needed to raise the object above the ground
+        float yOffset = groundHeight - lowestPoint.y;
+
+        // Apply the offset to the object's position
+        gltfObject.transform.position += new Vector3(0f, yOffset, 0f);
+        */
+
         // Rotate the object as desired
         // gltfObject.transform.rotation = Quaternion.identity;
 
