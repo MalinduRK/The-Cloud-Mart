@@ -40,6 +40,7 @@ public class MultiModelLoader : MonoBehaviour
     // Create a parent object to hold all the downloaded objects
     public GameObject modelLoaderObject;
     public GameObject parentObject;
+    public GameObject baseObject;
     // Create a dictionary to store the items in separate, dynamically created arrays
     Dictionary<string, string[]> pages = new Dictionary<string, string[]>();
     // Keep track of page number in display
@@ -453,12 +454,11 @@ public class MultiModelLoader : MonoBehaviour
         string page = "page" + pageNumber;
 
         // Set initial position for the first game object
-        Vector3 position = modelLoaderObject.transform.position;
+        Vector3 loaderPosition = parentObject.transform.position;
+        //Debug.Log(loaderPosition);
 
-        // Set the scale of the parent object to perform correct positioning of the objects
-        float parentX = 3;
-        //float parentY = 1;
-        float parentZ = 3;
+        // Set the spacing for each object
+        float spacing = 2.5f;
 
         for (int i = 0; i < pages[page].Length; i++)
         {
@@ -466,22 +466,25 @@ public class MultiModelLoader : MonoBehaviour
             // Counter to get the positions of loaded items
             int counter = i + 1;
 
+            // Initialize object position as the position of the loader to make relative adjustments
+            Vector3 objectPosition = loaderPosition;
+
             // Change positioning if the items are loaded on the left side of the mart
             if (inverseLoad)
             {
                 switch (counter)
                 {
                     case 1:
-                        position += new Vector3(0, 0, 0);
+                        objectPosition += new Vector3(spacing, 0, spacing);
                         break;
                     case 2:
-                        position += new Vector3(0, 0, (float)(-1.5 * parentZ));
+                        objectPosition += new Vector3(spacing, 0, -spacing);
                         break;
                     case 3:
-                        position += new Vector3((float)(-1.5 * parentX), 0, 0);
+                        objectPosition += new Vector3(-spacing, 0, spacing);
                         break;
                     case 4:
-                        position += new Vector3(0, 0, (float)(1.5 * parentZ));
+                        objectPosition += new Vector3(-spacing, 0, -spacing);
                         break;
                     default:
                         Debug.Log("Wrong counter in switch statement!");
@@ -493,16 +496,16 @@ public class MultiModelLoader : MonoBehaviour
                 switch (counter)
                 {
                     case 1:
-                        position += new Vector3(0, 0, 0);
+                        objectPosition += new Vector3(-spacing, 0, -spacing);
                         break;
                     case 2:
-                        position += new Vector3(0, 0, (float)(1.5 * parentZ));
+                        objectPosition += new Vector3(-spacing, 0, spacing);
                         break;
                     case 3:
-                        position += new Vector3((float)(1.5 * parentX), 0, 0);
+                        objectPosition += new Vector3(spacing, 0, -spacing);
                         break;
                     case 4:
-                        position += new Vector3(0, 0, (float)(-1.5 * parentZ));
+                        objectPosition += new Vector3(spacing, 0, spacing);
                         break;
                     default:
                         Debug.Log("Wrong counter in switch statement!");
@@ -510,7 +513,7 @@ public class MultiModelLoader : MonoBehaviour
                 }
             }
 
-            StartCoroutine(DownloadAndSaveFile(pages[page][i], position));
+            StartCoroutine(DownloadAndSaveFile(pages[page][i], objectPosition));
         }
     }
 
@@ -580,11 +583,30 @@ public class MultiModelLoader : MonoBehaviour
         // Position the object in the scene as desired
         gltfObject.transform.position = position;
 
-        gltfObject.AddComponent<Rigidbody>();
+        //
+        /* // Get the lowest point of the bounding box in world space
+        Vector3 lowestPoint = gltfObject.transform.TransformPoint(bounds.min);
+        Debug.Log($"Low point of object {gltfObject.name}: {lowestPoint.y}");
 
-gltfObject.GetComponent<Rigidbody>().isKinematic = false;
-gltfObject.GetComponent<Rigidbody>().useGravity = true;
+        // Get the height of the ground at the object's position
+        MeshRenderer renderer = baseObject.GetComponent<MeshRenderer>();
+        Bounds baseBounds = renderer.bounds;
+        float groundHeight = baseBounds.size.y;
+        Debug.Log("Ground height: " + groundHeight);
 
+        // Calculate the offset needed to raise the object above the ground
+        float yOffset = groundHeight - lowestPoint.y;
+        Debug.Log("Offset: " + yOffset);
+
+        // Apply the offset to the object's position
+        gltfObject.transform.position += new Vector3(0f, yOffset, 0f); */
+        //
+       
+
+       /* gltfObject.AddComponent<Rigidbody>();
+
+        gltfObject.GetComponent<Rigidbody>().isKinematic = false;
+        gltfObject.GetComponent<Rigidbody>().useGravity = true; */
 
         /* RaycastHit hit;
 
@@ -595,20 +617,6 @@ gltfObject.GetComponent<Rigidbody>().useGravity = true;
             gltfObject.transform.position += new Vector3(0f, yOffset, 0f);
         } */
 
-        //
-        /*
-        // Get the lowest point of the bounding box in world space
-        Vector3 lowestPoint = gltfObject.transform.TransformPoint(bounds.min);
-
-        // Get the height of the ground at the object's position
-        float groundHeight = 2.0f; //Terrain.activeTerrain.SampleHeight(gltfObject.transform.position);
-
-        // Calculate the offset needed to raise the object above the ground
-        float yOffset = groundHeight - lowestPoint.y;
-
-        // Apply the offset to the object's position
-        gltfObject.transform.position += new Vector3(0f, yOffset, 0f);
-        */
 
         // Rotate the object as desired
         // gltfObject.transform.rotation = Quaternion.identity;
