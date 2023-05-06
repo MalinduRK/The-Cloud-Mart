@@ -46,7 +46,7 @@ GameObject:
   - component: {fileID: 2126597085350663129}
   m_Layer: 0
   m_Name: Sphere
-  m_TagString: Untagged
+  m_TagString: ItemLoader
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -510,3 +510,4 @@ MonoBehaviour:
   itemWidth: {fileID: 0}
   itemHeight: {fileID: 0}
   itemImage: {fileID: 0}
+  loaderTag: ItemLoader

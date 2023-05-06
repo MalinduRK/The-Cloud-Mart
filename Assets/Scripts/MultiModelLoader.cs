@@ -77,6 +77,12 @@ public class MultiModelLoader : MonoBehaviour
     public TextMeshProUGUI itemHeight;
     public Image itemImage;
 
+    // Define a tag to identify the object loader button
+    public string loaderTag = "ItemLoader";
+
+    // A list to store all game objects with the loader tag
+    private List<GameObject> itemLoaders = new List<GameObject>();
+
     void Start()
     {
         ItemDataLoader firestoreReader = FindObjectOfType<ItemDataLoader>();
@@ -94,6 +100,10 @@ public class MultiModelLoader : MonoBehaviour
 
         // Disable item panel on start
         //itemPanel.SetActive(false);
+
+        // Find all game objects with the loader tag and add them to the list
+        GameObject[] loaderButtons = GameObject.FindGameObjectsWithTag(loaderTag);
+        itemLoaders.AddRange(loaderButtons);
     }
 
     private void Update()
@@ -110,18 +120,25 @@ public class MultiModelLoader : MonoBehaviour
         // Only work if the app isn't paused
         if (!GameState.timeIsPaused)
         {
-            // Check if the player camera is looking at the said object
-            if (Physics.Raycast(ray, out RaycastHit hit, maxDistance) && hit.collider.gameObject == buttonObject)
+            RaycastHit hit;
+            // Check if the player camera is looking at any of the item loader buttons
+            foreach (GameObject loader in itemLoaders)
             {
-                promptText.text = "Load more items\n[Left Mouse Button]\n(" + pageNumber + "/" + totalPages + ")";
-                if (Mouse.current.leftButton.wasPressedThisFrame)
+                if (Physics.Raycast(ray, out hit, maxDistance) && hit.collider.gameObject == loader)
                 {
-                    ButtonPressDebug("Left Mouse Button");
-                    StartCoroutine(LoadFiles());
+                    promptText.text = "Load more items\n[Left Mouse Button]\n(" + pageNumber + "/" + totalPages + ")";
+                    if (Mouse.current.leftButton.wasPressedThisFrame)
+                    {
+                        ButtonPressDebug("Left Mouse Button");
+                        StartCoroutine(LoadFiles());
+                    }
+                    // Exit the foreach loop once a prefab item has been found
+                    return;
                 }
             }
+            
             // Check if the player is looking at a loaded item and take action
-            else if (Physics.Raycast(ray, out hit, maxDistance) && hit.collider.transform.parent != null && hit.collider.transform.parent.gameObject.name == "Items")
+            if (Physics.Raycast(ray, out hit, maxDistance) && hit.collider.transform.parent != null && hit.collider.transform.parent.gameObject.name == "Items")
             {
                 if (!isItemPanelOpen)
                 {
