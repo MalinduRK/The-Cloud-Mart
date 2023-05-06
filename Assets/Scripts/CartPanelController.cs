@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using TMPro;
 using UnityEngine;
 
 public class CartPanelController : MonoBehaviour
@@ -7,6 +8,7 @@ public class CartPanelController : MonoBehaviour
     public bool customDebug;
     public bool buttonDebug;
     public GameObject cartMenu;
+    public TextMeshProUGUI cartText;
     // Scroll view
     public GameObject itemPrefab;
     public RectTransform cartContent;
@@ -140,6 +142,8 @@ public class CartPanelController : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+
+        cartText.text = "In Cart: -";
     }
 
     private void CustomDebug(string message)
