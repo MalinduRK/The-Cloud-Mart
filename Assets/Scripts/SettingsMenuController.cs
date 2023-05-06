@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SettingsMenu : MonoBehaviour
+public class SettingsMenuController : MonoBehaviour
 {
     public void GoToMainMenu()
     {

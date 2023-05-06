@@ -57,6 +57,10 @@ public class PauseMenuController : MonoBehaviour
         pauseMenu.SetActive(false);
     }
 
+    public void Restart(){
+        SceneManager.LoadScene("LoadingScreen");
+    }
+
     public void Settings()
     {
         ButtonPressDebug("Settings");
@@ -86,6 +90,17 @@ public class PauseMenuController : MonoBehaviour
         pauseMenu.SetActive(true);
         settingsMenu.SetActive(false);
     }
+
+    /* public void DestroyItems()
+    {
+        CustomDebug("Destroying items");
+        // Iterate through all the child objects and destroy them
+        foreach (Transform child in parentObject.transform)
+        {
+            Destroy(child.gameObject);
+            CustomDebug("Destroyed item: " + child.gameObject);
+        }
+    } */
 
     private void CustomDebug(string message)
     {
