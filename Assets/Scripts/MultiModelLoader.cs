@@ -136,7 +136,7 @@ public class MultiModelLoader : MonoBehaviour
                     return;
                 }
             }
-            
+
             // Check if the player is looking at a loaded item and take action
             if (Physics.Raycast(ray, out hit, maxDistance) && hit.collider.transform.parent != null && hit.collider.transform.parent.gameObject.name == "Items")
             {
@@ -665,15 +665,36 @@ public class MultiModelLoader : MonoBehaviour
         Texture2D texture = new Texture2D(2, 2);
         texture.LoadImage(imageData);
 
-        // Create a new sprite from the texture and set it on the Image UI element
-        Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+        // Set the maximum width and height of the image
+        float maxWidth = 500f;
+        float maxHeight = 350f;
 
-        // Set the height of the Image UI element
+        // Calculate the width and height of the Image UI element based on the texture aspect ratio
         RectTransform rectTransform = itemImage.GetComponent<RectTransform>();
         float imageRatio = (float)texture.width / texture.height;
+        float width = rectTransform.rect.height * imageRatio;
         float height = rectTransform.rect.width / imageRatio;
+
+        // If the calculated width exceeds the maximum width, set the width to the maximum width and adjust the height accordingly
+        if (width > maxWidth)
+        {
+            height = height * (maxWidth / width);
+            width = maxWidth;
+        }
+
+        // If the calculated height exceeds the maximum height, set the height to the maximum height and adjust the width accordingly
+        if (height > maxHeight)
+        {
+            width = width * (maxHeight / height);
+            height = maxHeight;
+        }
+
+        // Set the width and height of the Image UI element
+        rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
         rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
 
+        // Create a new sprite from the texture and set it on the Image UI element
+        Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
         itemImage.sprite = sprite;
     }
 
