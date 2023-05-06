@@ -128,6 +128,20 @@ public class CartPanelController : MonoBehaviour
         }
     }
 
+    public void ClearCart(){
+        ButtonPressDebug("Clear Cart");
+        CustomDebug("Clearing cart");
+
+        // Clear the cart list
+        ItemDetailsPanelController.cart.Clear();
+
+        // Clear the cart from the UI
+        foreach (Transform child in cartContent.transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
     private void CustomDebug(string message)
     {
         if (customDebug)
