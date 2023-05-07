@@ -475,7 +475,7 @@ public class MultiModelLoader : MonoBehaviour
         //Debug.Log(loaderPosition);
 
         // Set the spacing for each object
-        float spacing = 2.5f;
+        float spacing = 2f;
 
         for (int i = 0; i < pages[page].Length; i++)
         {
