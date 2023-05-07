@@ -7,6 +7,10 @@ public class PauseMenuController : MonoBehaviour
     public bool buttonDebug;
     public GameObject pauseMenu;
     public GameObject settingsMenu;
+    //
+    // Other panels
+    public GameObject itemPanel;
+    public GameObject cartPanel;
 
     // Start is called before the first frame update
     void Start()
@@ -22,13 +26,17 @@ public class PauseMenuController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             ButtonPressDebug("Esc");
-            if (!GameState.timeIsPaused)
+            // Only open pause menu if no panels are currently active
+            if(!itemPanel.activeSelf && !cartPanel.activeSelf)
             {
-                PauseSession();
-            }
-            else
-            {
-                ResumeSession();
+                if (!GameState.timeIsPaused)
+                {
+                    PauseSession();
+                }
+                else
+                {
+                    ResumeSession();
+                }
             }
         }
     }
