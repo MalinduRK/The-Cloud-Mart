@@ -11,7 +11,7 @@ public class ItemDetailsPanelController : MonoBehaviour
     public GameObject itemDetailsPanel;
     public Text promptText;
     public TextMeshProUGUI cartText;
-    public static List<string> cart = new List<string>();
+    public static Dictionary<string, int> cart = new Dictionary<string, int>();
     // Raycast
     public Camera mainCamera;
     public float maxDistance = 2.5f;
@@ -49,7 +49,14 @@ public class ItemDetailsPanelController : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, maxDistance))
         {
             string objectName = hit.collider.gameObject.name;
-            cart.Add(objectName);
+            if (cart.ContainsKey(objectName))
+            {
+                cart[objectName] += 1; // increase the count by 1 if the item already exists in the cart
+            }
+            else
+            {
+                cart.Add(objectName, 1); // add the item to the cart with a count of 1 if it doesn't exist in the cart
+            }
             CustomDebug($"{objectName} added to cart");
         }
         cartText.text = $"In Cart: {cart.Count}";

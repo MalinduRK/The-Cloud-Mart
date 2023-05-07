@@ -8,6 +8,7 @@ public class CartItemLayout : MonoBehaviour
     public TextMeshProUGUI seller;
     public TextMeshProUGUI price;
     public Image image;
+    public TextMeshProUGUI quantity;
 
     public void Populate(CartItem item)
     {
@@ -15,5 +16,6 @@ public class CartItemLayout : MonoBehaviour
         seller.text = item.seller;
         price.text = "Rs." + item.price;
         image.sprite = item.image;
+        quantity.text = "X" + item.quantity.ToString();
     }
 }

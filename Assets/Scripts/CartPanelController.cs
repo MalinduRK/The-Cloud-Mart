@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using TMPro;
@@ -36,6 +37,8 @@ public class CartPanelController : MonoBehaviour
             {
                 OpenPanel();
             }
+            // Reading the cart again since there was an issue with loading. It works correctly only when this is done, until the solution is found
+            ReadCart();
         }
     }
 
@@ -73,58 +76,49 @@ public class CartPanelController : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        // Read item Ids from cart list
-        List<string> cart = ItemDetailsPanelController.cart;
-        // Debug.Log("Cart count: " + cart.Count);
+        // Read items and quantities from the cart dictionary
+        Dictionary<string, int> cart = ItemDetailsPanelController.cart;
 
         // Instantiate new object from CartItem model
         cartItems = new List<CartItem>();
 
         // Instantiate item prefabs and populate with data
-        for (int i = 0; i < cart.Count; i++)
+        foreach (KeyValuePair<string, int> cartItem in cart)
         {
-            Debug.Log("Entered for loop");
+            string itemId = cartItem.Key;
+            int quantity = cartItem.Value;
+
             string name = "";
             string seller = "";
             string price = "";
             string imageExtension = "";
 
             // Retrieve required values from the items dictionary
-            if (MultiModelLoader.items.ContainsKey(cart[i]))
+            if (MultiModelLoader.items.ContainsKey(itemId))
             {
-                Debug.Log($"MultiModelLoader contains {cart[i]}");
-                name = MultiModelLoader.items[cart[i]].ItemName;
-                seller = MultiModelLoader.items[cart[i]].SellerName;
-                price = MultiModelLoader.items[cart[i]].ItemPrice.ToString();
-                imageExtension = MultiModelLoader.items[cart[i]].ImageFileExtension;
+                Debug.Log($"MultiModelLoader contains {itemId}");
+                name = MultiModelLoader.items[itemId].ItemName;
+                seller = MultiModelLoader.items[itemId].SellerName;
+                price = MultiModelLoader.items[itemId].ItemPrice.ToString();
+                imageExtension = MultiModelLoader.items[itemId].ImageFileExtension;
             }
 
             // Create sprite using image name and extension
-            //
-            //
-            string fileName = cart[i] + "_image." + imageExtension;
+            string fileName = itemId + "_image." + imageExtension;
             string imagePath = $"{Application.persistentDataPath}/Files/Images/";
-            //
-            // Read the image data from file
             byte[] imageData = File.ReadAllBytes(imagePath + fileName);
-            //
-            // Create a new texture and load the image data into it
             Texture2D texture = new Texture2D(2, 2);
             texture.LoadImage(imageData);
-            //
-            // Create a new sprite from the texture and set it on the Image UI element
             Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
 
-            // Add items to the new list
-            cartItems.Add(new CartItem(name, seller, price, sprite));
+            // Add items to the new list with quantity
+            cartItems.Add(new CartItem(name, seller, price, sprite, quantity));
 
             GameObject item = Instantiate(itemPrefab, cartContent);
-            //CartItemLayout layout = item.GetComponent<CartItemLayout>();
-            //layout.Populate(cartItems[i]);
-            if (item.TryGetComponent<CartItemLayout>(out CartItemLayout layout))
+            if (itemPrefab.TryGetComponent<CartItemLayout>(out CartItemLayout layout))
             {
                 CustomDebug("Populating items");
-                layout.Populate(cartItems[i]);
+                layout.Populate(cartItems[cartItems.Count - 1]);
             }
             else
             {
@@ -180,12 +174,14 @@ public class CartItem
     public string seller;
     public string price;
     public Sprite image;
+    public int quantity;
 
-    public CartItem(string name, string seller, string price, Sprite image)
+    public CartItem(string name, string seller, string price, Sprite image, int quantity)
     {
         this.name = name;
         this.seller = seller;
         this.price = price;
         this.image = image;
+        this.quantity = quantity;
     }
 }

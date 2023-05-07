@@ -579,6 +579,7 @@ MonoBehaviour:
   seller: {fileID: 626127243715355655}
   price: {fileID: 4785336565935058036}
   image: {fileID: 6599933410755761516}
+  quantity: {fileID: 1057544966675945098}
 --- !u!1 &7598375348163574118
 GameObject:
   m_ObjectHideFlags: 0
