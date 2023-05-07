@@ -84,7 +84,7 @@ public class MultiModelLoader : MonoBehaviour
     // A list to store all game objects with the loader tag
     private List<GameObject> itemLoaders = new List<GameObject>();
 
-    void Start()
+    IEnumerator Start()
     {
         ItemDataLoader firestoreReader = FindObjectOfType<ItemDataLoader>();
         // Subscribe to the loader event from ItemDataLoader
@@ -97,6 +97,7 @@ public class MultiModelLoader : MonoBehaviour
         imagePath = localPath + "Images/";
         modelPath = localPath + "Models/";
 
+        yield return new WaitForSeconds(1f);
         ReadData();
 
         // Disable item panel on start
