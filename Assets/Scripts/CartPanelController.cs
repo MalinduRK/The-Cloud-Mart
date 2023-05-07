@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class CartPanelController : MonoBehaviour
 {
@@ -17,8 +18,16 @@ public class CartPanelController : MonoBehaviour
     public GameObject itemPrefab;
     public RectTransform cartContent;
     private List<CartItem> cartItems;       // list of items to display
+    Dictionary<string, int> cart = new Dictionary<string, int>();
     //
     private bool isCartPanelOpen;
+    //
+    // Firestore
+    public string databaseURL; // The URL of your Firestore database
+    public string collectionName; // The name of the collection to add the document to
+    public string apiKey; // Your Firebase project's API key
+    public string documentID; // The ID of the new Firestore document
+    public string jsonData; // The data to be added to the new Firestore document, in JSON format
 
     // Start is called before the first frame update
     void Start()
@@ -77,7 +86,7 @@ public class CartPanelController : MonoBehaviour
         }
 
         // Read items and quantities from the cart dictionary
-        Dictionary<string, int> cart = ItemDetailsPanelController.cart;
+        cart = ItemDetailsPanelController.cart;
 
         // Instantiate new object from CartItem model
         cartItems = new List<CartItem>();
@@ -146,9 +155,66 @@ public class CartPanelController : MonoBehaviour
 
     public void GoToCheckout()
     {
+        // Wrap your dictionary in a wrapper class
+        DictionaryWrapper wrapper = new DictionaryWrapper(cart);
+
+        // Convert the wrapper class to JSON format
+        string json = JsonUtility.ToJson(wrapper);
+
+        // Output the JSON string
+        Debug.Log(json);
+
+        // Post the data into firestore
+        PostToFirestore();
         string url = "https://thecloudmart.000webhostapp.com/checkout.html";
         // Open the specified URL in the default browser
         Application.OpenURL(url);
+    }
+
+    // Wrapper class for dictionary
+    [System.Serializable]
+    private class DictionaryWrapper
+    {
+        public Dictionary<string, int> dictionary;
+
+        public DictionaryWrapper(Dictionary<string, int> dict)
+        {
+            dictionary = dict;
+        }
+    }
+
+    public void PostToFirestore()
+    {
+        // Create a new UnityWebRequest object
+        UnityWebRequest www = new UnityWebRequest(databaseURL + "/" + collectionName + "/" + documentID, "POST");
+
+        // Set the headers for the request
+        www.SetRequestHeader("Content-Type", "application/json");
+        www.SetRequestHeader("Authorization", "Bearer " + apiKey);
+
+        // Set the data to be sent with the request
+        byte[] data = System.Text.Encoding.UTF8.GetBytes(jsonData);
+        www.uploadHandler = new UploadHandlerRaw(data);
+        www.downloadHandler = new DownloadHandlerBuffer();
+
+        // Send the request
+        StartCoroutine(SendRequest(www));
+    }
+
+    IEnumerator SendRequest(UnityWebRequest www)
+    {
+        // Wait for the response from the server
+        yield return www.SendWebRequest();
+
+        // Check for errors
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.error);
+        }
+        else
+        {
+            Debug.Log("Cart added to Firestore!");
+        }
     }
 
     private void CustomDebug(string message)
