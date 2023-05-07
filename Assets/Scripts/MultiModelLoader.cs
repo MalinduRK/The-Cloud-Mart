@@ -600,6 +600,8 @@ public class MultiModelLoader : MonoBehaviour
 
         // Set the layer of the object to Realtime for realtime lighting to affect it
         int layerIndex = LayerMask.NameToLayer("Realtime");
+        // Since some models contain child objects, it's required to set all objects to that layer to receive lighting
+        SetLayerRecursively(gltfObject, layerIndex);
         gltfObject.layer = layerIndex;
 
         // Position the object in the scene as desired
@@ -620,6 +622,17 @@ public class MultiModelLoader : MonoBehaviour
         // Set the text of the TextMeshPro component
         textMeshPro.text = $"Item Name: {items[fileId].ItemName}\nItem Description: {items[fileId].ItemDescription}\nItem Price: {items[fileId].ItemPrice}";
         */
+    }
+
+    // Set the layer of the loaded object and all of its child objects to reveive realtime lighting
+    void SetLayerRecursively(GameObject obj, int layer)
+    {
+        obj.layer = layer;
+
+        foreach (Transform child in obj.transform)
+        {
+            SetLayerRecursively(child.gameObject, layer);
+        }
     }
 
     IEnumerator ShowImage(string fileId)
