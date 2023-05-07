@@ -597,6 +597,10 @@ public class MultiModelLoader : MonoBehaviour
         // Add a BoxCollider to the object
         gltfObject.AddComponent<BoxCollider>();
 
+        // Set the layer of the object to Realtime for realtime lighting to affect it
+        int layerIndex = LayerMask.NameToLayer("Realtime");
+        gltfObject.layer = layerIndex;
+
         // Position the object in the scene as desired
         gltfObject.transform.position = position;
 
