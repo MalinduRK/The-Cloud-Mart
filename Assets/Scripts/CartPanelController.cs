@@ -130,7 +130,8 @@ public class CartPanelController : MonoBehaviour
         }
     }
 
-    public void ClearCart(){
+    public void ClearCart()
+    {
         ButtonPressDebug("Clear Cart");
         CustomDebug("Clearing cart");
 
@@ -144,6 +145,13 @@ public class CartPanelController : MonoBehaviour
         }
 
         cartText.text = "In Cart: -";
+    }
+
+    public void GoToCheckout()
+    {
+        string url = "https://thecloudmart.000webhostapp.com/checkout.html";
+        // Open the specified URL in the default browser
+        Application.OpenURL(url);
     }
 
     private void CustomDebug(string message)
