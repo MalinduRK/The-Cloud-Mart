@@ -9,6 +9,9 @@ public class CartPanelController : MonoBehaviour
     public bool buttonDebug;
     public GameObject cartMenu;
     public TextMeshProUGUI cartText;
+    public GameObject itemPanel;
+    public GameObject pausePanel;
+    public GameObject settingsPanel;
     // Scroll view
     public GameObject itemPrefab;
     public RectTransform cartContent;
@@ -29,7 +32,7 @@ public class CartPanelController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return))
         {
             ButtonPressDebug("Return");
-            if (!isCartPanelOpen)
+            if (!isCartPanelOpen && !itemPanel.activeSelf && !pausePanel.activeSelf && !settingsPanel.activeSelf)
             {
                 OpenPanel();
             }

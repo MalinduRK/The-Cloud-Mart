@@ -488,42 +488,6 @@ Camera:
     type: 3}
   m_PrefabInstance: {fileID: 60889539378096550}
   m_PrefabAsset: {fileID: 0}
---- !u!21 &62858979
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: UI/RoundedCorners/RoundedCorners
-  m_Shader: {fileID: 4800000, guid: 0bd2ec5d73751e34a814274a454bec41, type: 3}
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _ColorMask: 15
-    - _Stencil: 0
-    - _StencilComp: 8
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    - _UseUIAlphaClip: 0
-    m_Colors:
-    - _WidthHeightRadius: {r: 500, g: 350, b: 100, a: 0}
-  m_BuildTextureStacks: []
 --- !u!1001 &65039034
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -735,7 +699,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 62858979}
+  m_Material: {fileID: 240456414}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -1953,6 +1917,42 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 235836200}
   m_CullTransparentMesh: 1
+--- !u!21 &240456414
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: UI/RoundedCorners/RoundedCorners
+  m_Shader: {fileID: 4800000, guid: 0bd2ec5d73751e34a814274a454bec41, type: 3}
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _ColorMask: 15
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 0
+    m_Colors:
+    - _WidthHeightRadius: {r: 500, g: 350, b: 100, a: 0}
+  m_BuildTextureStacks: []
 --- !u!4 &240680207 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2513638213442801179, guid: 02af96fee54ee07488ae431d4364b5f7,
@@ -4021,6 +4021,11 @@ PrefabInstance:
       propertyPath: itemName
       value: 
       objectReference: {fileID: 1349729943}
+    - target: {fileID: 81986023225278446, guid: 572082a0198898d4495b4ec1d9f3f197,
+        type: 3}
+      propertyPath: cartPanel
+      value: 
+      objectReference: {fileID: 235836200}
     - target: {fileID: 81986023225278446, guid: 572082a0198898d4495b4ec1d9f3f197,
         type: 3}
       propertyPath: itemImage
@@ -7959,6 +7964,7 @@ MonoBehaviour:
   settingsMenu: {fileID: 723396076}
   itemPanel: {fileID: 1843934466}
   cartPanel: {fileID: 235836200}
+  settingsPanel: {fileID: 723396076}
 --- !u!4 &1124931331
 Transform:
   m_ObjectHideFlags: 0
@@ -10968,6 +10974,11 @@ PrefabInstance:
       objectReference: {fileID: 1349729943}
     - target: {fileID: 81986023225278446, guid: 572082a0198898d4495b4ec1d9f3f197,
         type: 3}
+      propertyPath: cartPanel
+      value: 
+      objectReference: {fileID: 235836200}
+    - target: {fileID: 81986023225278446, guid: 572082a0198898d4495b4ec1d9f3f197,
+        type: 3}
       propertyPath: itemImage
       value: 
       objectReference: {fileID: 81876925}
@@ -13477,6 +13488,11 @@ PrefabInstance:
       objectReference: {fileID: 1349729943}
     - target: {fileID: 81986023225278446, guid: 572082a0198898d4495b4ec1d9f3f197,
         type: 3}
+      propertyPath: cartPanel
+      value: 
+      objectReference: {fileID: 235836200}
+    - target: {fileID: 81986023225278446, guid: 572082a0198898d4495b4ec1d9f3f197,
+        type: 3}
       propertyPath: itemImage
       value: 
       objectReference: {fileID: 81876925}
@@ -14351,6 +14367,9 @@ MonoBehaviour:
   buttonDebug: 1
   cartMenu: {fileID: 235836200}
   cartText: {fileID: 834599578}
+  itemPanel: {fileID: 1843934466}
+  pausePanel: {fileID: 642956510}
+  settingsPanel: {fileID: 723396076}
   itemPrefab: {fileID: 5263572086584069387, guid: 968d3c21a719b2640a0b1d746e09248c,
     type: 3}
   cartContent: {fileID: 1042843881}
@@ -14868,6 +14887,11 @@ PrefabInstance:
       propertyPath: itemName
       value: 
       objectReference: {fileID: 1349729943}
+    - target: {fileID: 81986023225278446, guid: 572082a0198898d4495b4ec1d9f3f197,
+        type: 3}
+      propertyPath: cartPanel
+      value: 
+      objectReference: {fileID: 235836200}
     - target: {fileID: 81986023225278446, guid: 572082a0198898d4495b4ec1d9f3f197,
         type: 3}
       propertyPath: itemImage
