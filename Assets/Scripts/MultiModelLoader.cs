@@ -615,14 +615,6 @@ public class MultiModelLoader : MonoBehaviour
 
         // Rotate the object as desired
         // gltfObject.transform.rotation = Quaternion.identity;
-
-        /*
-        // Attach a TextMeshPro component to the game object
-        TextMeshPro textMeshPro = gltfObject.AddComponent<TextMeshPro>();
-
-        // Set the text of the TextMeshPro component
-        textMeshPro.text = $"Item Name: {items[fileId].ItemName}\nItem Description: {items[fileId].ItemDescription}\nItem Price: {items[fileId].ItemPrice}";
-        */
     }
 
     // Set the layer of the loaded object and all of its child objects to reveive realtime lighting
