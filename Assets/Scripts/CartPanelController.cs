@@ -159,10 +159,10 @@ public class CartPanelController : MonoBehaviour
         DictionaryWrapper wrapper = new DictionaryWrapper(cart);
 
         // Convert the wrapper class to JSON format
-        string json = JsonUtility.ToJson(wrapper);
+        jsonData = JsonUtility.ToJson(wrapper);
 
         // Output the JSON string
-        Debug.Log(json);
+        Debug.Log(jsonData);
 
         // Post the data into firestore
         PostToFirestore();
@@ -189,11 +189,14 @@ public class CartPanelController : MonoBehaviour
         UnityWebRequest www = new UnityWebRequest(databaseURL + "/" + collectionName + "/" + documentID, "POST");
 
         // Set the headers for the request
-        www.SetRequestHeader("Content-Type", "application/json");
-        www.SetRequestHeader("Authorization", "Bearer " + apiKey);
+        //www.SetRequestHeader("Content-Type", "application/json");
+        //www.SetRequestHeader("Authorization", "Bearer " + apiKey);
+
+        // Setting the headers doesn't work for some reason
 
         // Set the data to be sent with the request
         byte[] data = System.Text.Encoding.UTF8.GetBytes(jsonData);
+        CustomDebug(data.ToString());
         www.uploadHandler = new UploadHandlerRaw(data);
         www.downloadHandler = new DownloadHandlerBuffer();
 
