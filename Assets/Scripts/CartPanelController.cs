@@ -194,6 +194,14 @@ public class CartPanelController : MonoBehaviour
 
         // Setting the headers doesn't work for some reason
 
+        // Manually setting the json file
+        jsonData = "{ \"fields\": {";
+        foreach (KeyValuePair<string, int> cartItem in cart)
+        {
+            jsonData += $"\"{cartItem.Key}\": {{ \"stringValue\": \"{cartItem.Value}\"}},";
+        }
+        jsonData += "} }";
+
         // Set the data to be sent with the request
         byte[] data = System.Text.Encoding.UTF8.GetBytes(jsonData);
         CustomDebug(data.ToString());
