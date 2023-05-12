@@ -156,13 +156,13 @@ public class CartPanelController : MonoBehaviour
     public void GoToCheckout()
     {
         // Wrap your dictionary in a wrapper class
-        DictionaryWrapper wrapper = new DictionaryWrapper(cart);
+        //DictionaryWrapper wrapper = new DictionaryWrapper(cart);
 
         // Convert the wrapper class to JSON format
-        jsonData = JsonUtility.ToJson(wrapper);
+        //jsonData = JsonUtility.ToJson(wrapper);
 
         // Output the JSON string
-        Debug.Log(jsonData);
+        //Debug.Log(jsonData);
 
         // Post the data into firestore
         PostToFirestore();
@@ -171,7 +171,7 @@ public class CartPanelController : MonoBehaviour
         Application.OpenURL(url);
     }
 
-    // Wrapper class for dictionary
+    /* // Wrapper class for dictionary
     [System.Serializable]
     private class DictionaryWrapper
     {
@@ -181,7 +181,7 @@ public class CartPanelController : MonoBehaviour
         {
             dictionary = dict;
         }
-    }
+    } */
 
     public void PostToFirestore()
     {
@@ -204,7 +204,6 @@ public class CartPanelController : MonoBehaviour
 
         // Set the data to be sent with the request
         byte[] data = System.Text.Encoding.UTF8.GetBytes(jsonData);
-        CustomDebug(data.ToString());
         www.uploadHandler = new UploadHandlerRaw(data);
         www.downloadHandler = new DownloadHandlerBuffer();
 
