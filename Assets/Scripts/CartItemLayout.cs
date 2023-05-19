@@ -14,7 +14,7 @@ public class CartItemLayout : MonoBehaviour
     {
         itemName.text = item.name;
         seller.text = item.seller;
-        price.text = "Rs." + item.price;
+        price.text = "$" + item.price;
         image.sprite = item.image;
         quantity.text = "X" + item.quantity.ToString();
     }

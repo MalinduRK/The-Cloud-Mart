@@ -165,7 +165,7 @@ public class MultiModelLoader : MonoBehaviour
                             // Display item values
                             itemName.text = items[objectName].ItemName;
                             itemDescription.text = items[objectName].ItemDescription;
-                            itemPrice.text = items[objectName].ItemPrice.ToString();
+                            itemPrice.text = "$"+items[objectName].ItemPrice.ToString();
                             sellerName.text = items[objectName].SellerName;
                             itemLength.text = items[objectName].ItemLength.ToString();
                             itemWidth.text = items[objectName].ItemWidth.ToString();
