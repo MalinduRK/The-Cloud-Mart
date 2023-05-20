@@ -9,6 +9,10 @@ public class ControlsController : MonoBehaviour
     public TextMeshProUGUI minute;
     // Budget
     public TextMeshProUGUI budget;
+    // Session values available anywhere (static)
+    public static int hourValue;
+    public static int minuteValue;
+    public static int budgetValue;
 
     public void HourUp()
     {
@@ -16,7 +20,7 @@ public class ControlsController : MonoBehaviour
         // Get hour value
         string hourString = hour.text;
         // Convert to int
-        int hourValue = int.Parse(hourString);
+        hourValue = int.Parse(hourString);
         // Increment hour value by 1
         hourValue++;
         // Change hour text in the UI
@@ -29,7 +33,7 @@ public class ControlsController : MonoBehaviour
         // Get hour value
         string hourString = hour.text;
         // Convert to int
-        int hourValue = int.Parse(hourString);
+        hourValue = int.Parse(hourString);
         // Decrement hour value by 1
         if (hourValue > 0)
         {
@@ -45,7 +49,7 @@ public class ControlsController : MonoBehaviour
         // Get minute value
         string minuteString = minute.text;
         // Convert to int
-        int minuteValue = int.Parse(minuteString);
+        minuteValue = int.Parse(minuteString);
         // Increment minute value by 5
         if (minuteValue < 60)
         {
@@ -61,7 +65,7 @@ public class ControlsController : MonoBehaviour
         // Get minute value
         string minuteString = minute.text;
         // Convert to int
-        int minuteValue = int.Parse(minuteString);
+        minuteValue = int.Parse(minuteString);
         // Decrement minute value by 5
         if (minuteValue > 0)
         {
@@ -77,7 +81,7 @@ public class ControlsController : MonoBehaviour
         // Get budget value
         string budgetString = budget.text;
         // Convert to int
-        int budgetValue = int.Parse(budgetString);
+        budgetValue = int.Parse(budgetString);
         // Increment budget value by 50
         if (budgetValue < 950)
         {
@@ -93,7 +97,7 @@ public class ControlsController : MonoBehaviour
         // Get budget value
         string budgetString = budget.text;
         // Convert to int
-        int budgetValue = int.Parse(budgetString);
+        budgetValue = int.Parse(budgetString);
         // Decrement budget value by 50
         if (budgetValue > 0)
         {
