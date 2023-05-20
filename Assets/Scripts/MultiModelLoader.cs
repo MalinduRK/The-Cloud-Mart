@@ -84,7 +84,7 @@ public class MultiModelLoader : MonoBehaviour
     // A list to store all game objects with the loader tag
     private List<GameObject> itemLoaders = new List<GameObject>();
 
-    void Start()
+    IEnumerator Start()
     {
         ItemDataLoader firestoreReader = FindObjectOfType<ItemDataLoader>();
         // Subscribe to the loader event from ItemDataLoader
@@ -97,6 +97,7 @@ public class MultiModelLoader : MonoBehaviour
         imagePath = localPath + "Images/";
         modelPath = localPath + "Models/";
 
+        yield return new WaitForSeconds(1f);
         ReadData();
 
         // Disable item panel on start
@@ -164,7 +165,7 @@ public class MultiModelLoader : MonoBehaviour
                             // Display item values
                             itemName.text = items[objectName].ItemName;
                             itemDescription.text = items[objectName].ItemDescription;
-                            itemPrice.text = items[objectName].ItemPrice.ToString();
+                            itemPrice.text = "$"+items[objectName].ItemPrice.ToString();
                             sellerName.text = items[objectName].SellerName;
                             itemLength.text = items[objectName].ItemLength.ToString();
                             itemWidth.text = items[objectName].ItemWidth.ToString();
@@ -600,6 +601,8 @@ public class MultiModelLoader : MonoBehaviour
 
         // Set the layer of the object to Realtime for realtime lighting to affect it
         int layerIndex = LayerMask.NameToLayer("Realtime");
+        // Since some models contain child objects, it's required to set all objects to that layer to receive lighting
+        SetLayerRecursively(gltfObject, layerIndex);
         gltfObject.layer = layerIndex;
 
         // Position the object in the scene as desired
@@ -612,14 +615,17 @@ public class MultiModelLoader : MonoBehaviour
 
         // Rotate the object as desired
         // gltfObject.transform.rotation = Quaternion.identity;
+    }
 
-        /*
-        // Attach a TextMeshPro component to the game object
-        TextMeshPro textMeshPro = gltfObject.AddComponent<TextMeshPro>();
+    // Set the layer of the loaded object and all of its child objects to reveive realtime lighting
+    void SetLayerRecursively(GameObject obj, int layer)
+    {
+        obj.layer = layer;
 
-        // Set the text of the TextMeshPro component
-        textMeshPro.text = $"Item Name: {items[fileId].ItemName}\nItem Description: {items[fileId].ItemDescription}\nItem Price: {items[fileId].ItemPrice}";
-        */
+        foreach (Transform child in obj.transform)
+        {
+            SetLayerRecursively(child.gameObject, layer);
+        }
     }
 
     IEnumerator ShowImage(string fileId)
