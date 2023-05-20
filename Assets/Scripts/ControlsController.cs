@@ -75,9 +75,9 @@ public class ControlsController : MonoBehaviour
         minute.text = minuteValue.ToString();
     }
 
-    public void OnesUp()
+    public void BudgetUp()
     {
-        ButtonPressDebug("Budget Ones Up");
+        ButtonPressDebug("Budget Up");
         // Get budget value
         string budgetString = budget.text;
         // Convert to int
@@ -91,9 +91,9 @@ public class ControlsController : MonoBehaviour
         budget.text = budgetValue.ToString();
     }
 
-    public void OnesDown()
+    public void BudgetDown()
     {
-        ButtonPressDebug("Budget Ones Down");
+        ButtonPressDebug("Budget Down");
         // Get budget value
         string budgetString = budget.text;
         // Convert to int
@@ -105,6 +105,11 @@ public class ControlsController : MonoBehaviour
         }
         // Change budget text in the UI
         budget.text = budgetValue.ToString();
+    }
+
+    public void ChangeFocus()
+    {
+
     }
 
     private void ButtonPressDebug(string message)
