@@ -156,6 +156,7 @@ MonoBehaviour:
   hour: {fileID: 601779933}
   minute: {fileID: 1569121021}
   budget: {fileID: 1096993343}
+  focus: {fileID: 501060673}
 --- !u!4 &54604204
 Transform:
   m_ObjectHideFlags: 0
@@ -1637,7 +1638,19 @@ MonoBehaviour:
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 54604203}
+        m_TargetAssemblyTypeName: ControlsController, Assembly-CSharp
+        m_MethodName: ChangeFocus
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_AlphaFadeSpeed: 0.15
 --- !u!114 &501060674
 MonoBehaviour:

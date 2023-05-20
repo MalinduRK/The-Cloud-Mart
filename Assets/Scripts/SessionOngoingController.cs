@@ -12,6 +12,7 @@ public class SessionOngoingController : MonoBehaviour
     {
         time.text = $"Session Time: {ControlsController.hourValue}:{ControlsController.minuteValue}:00";
         budget.text = $"Budget: ${ControlsController.budgetValue}";
+        focus.text = $"Primary Focus: {ControlsController.focusValue}";
     }
 
     // Update is called once per frame

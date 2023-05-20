@@ -9,10 +9,13 @@ public class ControlsController : MonoBehaviour
     public TextMeshProUGUI minute;
     // Budget
     public TextMeshProUGUI budget;
+    // Focus
+    public TMP_Dropdown focus;
     // Session values available anywhere (static)
     public static int hourValue;
     public static int minuteValue;
     public static int budgetValue;
+    public static string focusValue;
 
     public void HourUp()
     {
@@ -109,7 +112,8 @@ public class ControlsController : MonoBehaviour
 
     public void ChangeFocus()
     {
-
+        focusValue = focus.options[focus.value].text;
+        Debug.Log("Selected Value: " + focusValue);
     }
 
     private void ButtonPressDebug(string message)
