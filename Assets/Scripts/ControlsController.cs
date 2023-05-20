@@ -8,8 +8,7 @@ public class ControlsController : MonoBehaviour
     public TextMeshProUGUI hour;
     public TextMeshProUGUI minute;
     // Budget
-    public TextMeshProUGUI ones;
-    public TextMeshProUGUI thousands;
+    public TextMeshProUGUI budget;
 
     public void HourUp()
     {
@@ -76,20 +75,20 @@ public class ControlsController : MonoBehaviour
     {
         ButtonPressDebug("Budget Ones Up");
         // Get budget value
-        string budgetString = ones.text;
+        string budgetString = budget.text;
         // Convert to int
         int budgetValue = int.Parse(budgetString);
         // Increment budget value by 50
         budgetValue += 50;
         // Change budget text in the UI
-        ones.text = budgetValue.ToString();
+        budget.text = budgetValue.ToString();
     }
 
     public void OnesDown()
     {
         ButtonPressDebug("Budget Ones Down");
         // Get budget value
-        string budgetString = ones.text;
+        string budgetString = budget.text;
         // Convert to int
         int budgetValue = int.Parse(budgetString);
         // Decrement budget value by 50
@@ -98,7 +97,7 @@ public class ControlsController : MonoBehaviour
             budgetValue -= 50;
         }
         // Change budget text in the UI
-        ones.text = budgetValue.ToString();
+        budget.text = budgetValue.ToString();
     }
 
     private void ButtonPressDebug(string message)

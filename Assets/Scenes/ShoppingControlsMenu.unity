@@ -155,8 +155,7 @@ MonoBehaviour:
   buttonDebug: 1
   hour: {fileID: 601779933}
   minute: {fileID: 1569121021}
-  ones: {fileID: 1096993343}
-  thousands: {fileID: 0}
+  budget: {fileID: 1096993343}
 --- !u!4 &54604204
 Transform:
   m_ObjectHideFlags: 0
@@ -3017,7 +3016,7 @@ GameObject:
   - component: {fileID: 1096993344}
   - component: {fileID: 1096993343}
   m_Layer: 5
-  m_Name: BudgetOnes
+  m_Name: BudgetValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
