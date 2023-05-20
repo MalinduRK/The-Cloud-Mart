@@ -4,8 +4,12 @@ using TMPro;
 public class ControlsController : MonoBehaviour
 {
     public bool buttonDebug;
+    // Time
     public TextMeshProUGUI hour;
     public TextMeshProUGUI minute;
+    // Budget
+    public TextMeshProUGUI ones;
+    public TextMeshProUGUI thousands;
 
     public void HourUp()
     {
@@ -66,6 +70,35 @@ public class ControlsController : MonoBehaviour
         }
         // Change minute text in the UI
         minute.text = minuteValue.ToString();
+    }
+
+    public void OnesUp()
+    {
+        ButtonPressDebug("Budget Ones Up");
+        // Get budget value
+        string budgetString = ones.text;
+        // Convert to int
+        int budgetValue = int.Parse(budgetString);
+        // Increment budget value by 50
+        budgetValue += 50;
+        // Change budget text in the UI
+        ones.text = budgetValue.ToString();
+    }
+
+    public void OnesDown()
+    {
+        ButtonPressDebug("Budget Ones Down");
+        // Get budget value
+        string budgetString = ones.text;
+        // Convert to int
+        int budgetValue = int.Parse(budgetString);
+        // Decrement budget value by 50
+        if (budgetValue > 0)
+        {
+            budgetValue -= 50;
+        }
+        // Change budget text in the UI
+        ones.text = budgetValue.ToString();
     }
 
     private void ButtonPressDebug(string message)
