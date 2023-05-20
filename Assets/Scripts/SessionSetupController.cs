@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class SessionController : MonoBehaviour
+public class SessionSetupController : MonoBehaviour
 {
     public bool buttonDebug;
     public Toggle sessionControlToggle;
