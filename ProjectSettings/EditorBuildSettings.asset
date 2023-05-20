@@ -15,6 +15,9 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenuSettings.unity
     guid: 4a78a541f2468ae40a17c10a29c6d87f
   - enabled: 1
+    path: Assets/Scenes/ShoppingControlsMenu.unity
+    guid: d7acd8a3f95a635468b4b555c3e569f0
+  - enabled: 1
     path: Assets/Scenes/LoadingScreen.unity
     guid: 745bbfc3e1a4b7c4abdcd623138c74e8
   - enabled: 1
