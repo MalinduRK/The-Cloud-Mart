@@ -79,7 +79,10 @@ public class ControlsController : MonoBehaviour
         // Convert to int
         int budgetValue = int.Parse(budgetString);
         // Increment budget value by 50
-        budgetValue += 50;
+        if (budgetValue < 950)
+        {
+            budgetValue += 50;
+        }
         // Change budget text in the UI
         budget.text = budgetValue.ToString();
     }
