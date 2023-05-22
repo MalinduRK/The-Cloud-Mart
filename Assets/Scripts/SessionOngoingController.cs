@@ -35,9 +35,15 @@ public class SessionOngoingController : MonoBehaviour
     // Other panels and objects
     public GameObject ItemDetailsPanel;
 
+    // Other variables
+    public static bool isSessionHalted;
+
     // Start is called before the first frame update
     void Start()
     {
+        // The session is not halted at the start
+        isSessionHalted = false;
+
         // Hide Cursor on session start
         GameState.HideCursor();
 
@@ -50,7 +56,7 @@ public class SessionOngoingController : MonoBehaviour
         budgetValue = ControlsController.budgetValue;
 
         //For testing:
-        hours = 1;
+        hours = 0;
         minutes = 0;
         seconds = 10;
         budgetValue = 500;
@@ -173,6 +179,9 @@ public class SessionOngoingController : MonoBehaviour
         // 1: Time
         // 2: Budget
         // 3: Focus
+
+        // Halt session
+        isSessionHalted = true;
 
         string alertMessage = "";
 

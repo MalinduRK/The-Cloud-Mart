@@ -63,6 +63,8 @@ public class CartPanelController : MonoBehaviour
         GameState.DisableCameraMovement();
         GameState.DisablePlayerMovement();
         cartMenu.SetActive(true);
+        // Pause session
+        GameState.PauseTime();
     }
 
     public void ClosePanel()
@@ -75,6 +77,8 @@ public class CartPanelController : MonoBehaviour
         GameState.EnableCameraMovement();
         GameState.EnablePlayerMovement();
         cartMenu.SetActive(false);
+        // Resume Session
+        GameState.ResumeTime();
     }
 
     public void ReadCart()
