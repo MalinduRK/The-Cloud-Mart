@@ -15,6 +15,7 @@ public class CartPanelController : MonoBehaviour
     public GameObject itemPanel;
     public GameObject pausePanel;
     public GameObject settingsPanel;
+    public GameObject sessionAlertPanel;
     // Scroll view
     public GameObject itemPrefab;
     public RectTransform cartContent;
@@ -43,7 +44,7 @@ public class CartPanelController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return))
         {
             ButtonPressDebug("Return");
-            if (!isCartPanelOpen && !itemPanel.activeSelf && !pausePanel.activeSelf && !settingsPanel.activeSelf)
+            if (!isCartPanelOpen && !itemPanel.activeSelf && !pausePanel.activeSelf && !settingsPanel.activeSelf && !sessionAlertPanel)
             {
                 OpenPanel();
             }

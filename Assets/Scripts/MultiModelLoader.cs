@@ -42,6 +42,7 @@ public class MultiModelLoader : MonoBehaviour
     public GameObject parentObject;
     public GameObject baseObject;
     public GameObject cartPanel;
+    public GameObject sessionAlertPanel;
     // Create a dictionary to store the items in separate, dynamically created arrays
     Dictionary<string, string[]> pages = new Dictionary<string, string[]>();
     // Keep track of page number in display
@@ -150,7 +151,7 @@ public class MultiModelLoader : MonoBehaviour
                 if (Mouse.current.leftButton.wasPressedThisFrame)
                 {
                     ButtonPressDebug("Left Mouse Button");
-                    if (!isItemPanelOpen && !cartPanel.activeSelf)
+                    if (!isItemPanelOpen && !cartPanel.activeSelf && !sessionAlertPanel)
                     {
                         EnterPanel();
                         // Hide button prompt when the panel is open
