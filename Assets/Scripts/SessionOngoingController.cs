@@ -20,6 +20,11 @@ public class SessionOngoingController : MonoBehaviour
         hours = ControlsController.hourValue;
         minutes = ControlsController.minuteValue;
 
+        //For testing:
+        hours = 0;
+        minutes = 0;
+        seconds = 10;
+
         // .ToString("00") makes the numbers in 2-digit format
         time.text = $"Session Time: {hours.ToString("00")}:{minutes.ToString("00")}:00";
         budget.text = $"Budget: ${ControlsController.budgetValue}";
