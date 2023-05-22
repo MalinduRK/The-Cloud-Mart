@@ -4,6 +4,7 @@ using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public class CartPanelController : MonoBehaviour
 {
@@ -169,6 +170,9 @@ public class CartPanelController : MonoBehaviour
         string url = "https://thecloudmart.000webhostapp.com/checkout.html";
         // Open the specified URL in the default browser
         Application.OpenURL(url);
+
+        // End session inside the application
+        SceneManager.LoadScene("SessionOverScreen");
     }
 
     /* // Wrapper class for dictionary
