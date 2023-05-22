@@ -14,6 +14,12 @@ public class SessionOngoingController : MonoBehaviour
     private int minutes;
     private int seconds;
 
+    // Initialize budget variables
+    private int budgetValue;
+
+    // Initialize focus variables
+    private string focusValue;
+
     // Session Alert Panel
     public GameObject SessionAlertPanel;
     public TextMeshProUGUI SessionAlertText;
@@ -21,6 +27,10 @@ public class SessionOngoingController : MonoBehaviour
     public GameObject ExtendBudgetButton;
     public GameObject RealizeFocusButton;
     public GameObject ClosePanelButton;
+
+    // Raycast
+    public Camera mainCamera;
+    public float maxDistance = 2.5f;
 
     // Start is called before the first frame update
     void Start()
@@ -31,19 +41,22 @@ public class SessionOngoingController : MonoBehaviour
         // Hide Session Alert Panel on start
         SessionAlertPanel.SetActive(false);
 
-        // Assign user selected times to the local variables
+        // Assign user controls to local variables
         hours = ControlsController.hourValue;
         minutes = ControlsController.minuteValue;
+        budgetValue = ControlsController.budgetValue;
 
         //For testing:
         hours = 1;
         minutes = 0;
         seconds = 10;
+        budgetValue = 500;
+        focusValue = "Bed";
 
         // .ToString("00") makes the numbers in 2-digit format
         time.text = $"Session Time: {hours.ToString("00")}:{minutes.ToString("00")}:00";
-        budget.text = $"Budget: {ControlsController.budgetValue}";
-        focus.text = $"Primary Focus: {ControlsController.focusValue}";
+        budget.text = $"Budget: ${budgetValue}";
+        focus.text = $"Primary Focus: {focusValue}";
 
         // Start the coroutine to update seconds at regular intervals
         StartCoroutine(UpdateSeconds());
@@ -92,6 +105,24 @@ public class SessionOngoingController : MonoBehaviour
 
         // Open pop-up when time is up
         SessionAlert(1);
+    }
+
+    public void UpdateBudget()
+    {
+        Ray ray = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+        if (Physics.Raycast(ray, out RaycastHit hit, maxDistance))
+        {
+            string objectName = hit.collider.gameObject.name;
+            // Reduce budget based on item price
+            if (MultiModelLoader.items.ContainsKey(objectName))
+            {
+                int price = (int)MultiModelLoader.items[objectName].ItemPrice;
+                budgetValue -= price;
+            }
+        }
+
+        // Update UI
+        budget.text = $"Budget: ${budgetValue.ToString()}";
     }
 
     public void ExtendTime()
