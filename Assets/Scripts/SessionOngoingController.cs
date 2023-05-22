@@ -8,16 +8,28 @@ public class SessionOngoingController : MonoBehaviour
     public TextMeshProUGUI time;
     public TextMeshProUGUI budget;
     public TextMeshProUGUI focus;
+
     // Initialize time variables
     private int hours;
     private int minutes;
     private int seconds;
+
+    // Session Alert Panel
+    public GameObject SessionAlertPanel;
+    public TextMeshProUGUI SessionAlertText;
+    public GameObject ExtendSessionButton;
+    public GameObject ExtendBudgetButton;
+    public GameObject RealizeFocusButton;
+    public GameObject ClosePanelButton;
 
     // Start is called before the first frame update
     void Start()
     {
         // Hide Cursor on session start
         GameState.HideCursor();
+
+        // Hide Session Alert Panel on start
+        SessionAlertPanel.SetActive(false);
 
         // Assign user selected times to the local variables
         hours = ControlsController.hourValue;
@@ -35,12 +47,6 @@ public class SessionOngoingController : MonoBehaviour
 
         // Start the coroutine to update seconds at regular intervals
         StartCoroutine(UpdateSeconds());
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     private IEnumerator UpdateSeconds()
@@ -83,6 +89,51 @@ public class SessionOngoingController : MonoBehaviour
             // Wait for 1 second
             yield return new WaitForSeconds(1f);
         }
+
+        // Open pop-up when time is up
+        SessionAlert(1);
+    }
+
+    private void SessionAlert(int alert)
+    {
+        // 1: Time
+        // 2: Budget
+        // 3: Focus
+
+        string alertMessage = "";
+
+        // Show session alert panel
+        SessionAlertPanel.SetActive(true);
+        // Hide all session related buttons from the panel
+        ExtendSessionButton.SetActive(false);
+        ExtendBudgetButton.SetActive(false);
+        RealizeFocusButton.SetActive(false);
+        ClosePanelButton.SetActive(false);
+
+        switch(alert)
+        {
+            case 1: 
+            alertMessage = "Your time is up!";
+            ExtendSessionButton.SetActive(true);
+            break;
+
+            case 2: 
+            alertMessage = "Your budget is too low!";
+            ExtendBudgetButton.SetActive(true);
+            break;
+
+            case 3: 
+            alertMessage = "You are not in focus!";
+            RealizeFocusButton.SetActive(true);
+            break;
+        }
+
+        SessionAlertText.text = alertMessage;
+        // Pause session
+        GameState.ShowCursor();
+        GameState.DisableCameraMovement();
+        GameState.DisablePlayerMovement();
+        GameState.PauseTime();
     }
 
     private void CustomDebug(string message)
