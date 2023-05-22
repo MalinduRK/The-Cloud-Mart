@@ -97,8 +97,6 @@ public class SessionOngoingController : MonoBehaviour
                         hours = 0;
                         minutes = 0;
                         seconds = 0;
-                        // Time's up, perform any necessary actions
-                        // You can stop the countdown here or reset the timer as needed
                         CustomDebug("Time's up!");
                         timeIsUp = true;
                     }
@@ -114,6 +112,11 @@ public class SessionOngoingController : MonoBehaviour
 
         // Open pop-up when time is up
         SessionAlert(1);
+    }
+
+    public void ForceUpdate()
+    {
+        StartCoroutine(UpdateSeconds());
     }
 
     public void UpdateBudget()
