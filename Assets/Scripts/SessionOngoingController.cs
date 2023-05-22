@@ -94,6 +94,27 @@ public class SessionOngoingController : MonoBehaviour
         SessionAlert(1);
     }
 
+    public void ExtendTime()
+    {
+        // Add 5 extra minutes
+        minutes += 5;
+
+        // Check if minutes exceeded 60 and convert to hours
+        if(minutes>60)
+        {
+            hours = minutes/60;
+            minutes = minutes%60;
+        }
+
+        // Update UI
+        time.text = $"Session Time: {hours.ToString("00")}:{minutes.ToString("00")}:{seconds.ToString("00")}";
+
+        EnableCloseButton();
+
+        // Restart time countdown
+        StartCoroutine(UpdateSeconds());
+    }
+
     private void SessionAlert(int alert)
     {
         // 1: Time
@@ -129,11 +150,28 @@ public class SessionOngoingController : MonoBehaviour
         }
 
         SessionAlertText.text = alertMessage;
-        // Pause session
+        PauseSession();
+    }
+
+    private void EnableCloseButton()
+    {
+        ClosePanelButton.SetActive(true);
+    }
+
+    public void PauseSession()
+    {
         GameState.ShowCursor();
         GameState.DisableCameraMovement();
         GameState.DisablePlayerMovement();
         GameState.PauseTime();
+    }
+
+    public void ResumeSession()
+    {
+        GameState.HideCursor();
+        GameState.EnableCameraMovement();
+        GameState.EnablePlayerMovement();
+        GameState.ResumeTime();
     }
 
     public void ClosePanel()
