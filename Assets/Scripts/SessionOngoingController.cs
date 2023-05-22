@@ -32,6 +32,9 @@ public class SessionOngoingController : MonoBehaviour
     public Camera mainCamera;
     public float maxDistance = 2.5f;
 
+    // Other panels and objects
+    public GameObject ItemDetailsPanel;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -117,7 +120,15 @@ public class SessionOngoingController : MonoBehaviour
             if (MultiModelLoader.items.ContainsKey(objectName))
             {
                 int price = (int)MultiModelLoader.items[objectName].ItemPrice;
-                budgetValue -= price;
+                // Change budget only if price does not exceed the remaining budget
+                if (budgetValue>=price)
+                {
+                    budgetValue -= price;
+                }
+                else
+                {
+                    SessionAlert(2);
+                }
             }
         }
 
@@ -146,6 +157,17 @@ public class SessionOngoingController : MonoBehaviour
         StartCoroutine(UpdateSeconds());
     }
 
+    public void AddBudget()
+    {
+        // Add $500 extra budget
+        budgetValue += 500;
+
+        // Update UI
+        budget.text = $"Budget: ${budgetValue.ToString()}";
+
+        EnableCloseButton();
+    }
+
     private void SessionAlert(int alert)
     {
         // 1: Time
@@ -161,6 +183,8 @@ public class SessionOngoingController : MonoBehaviour
         ExtendBudgetButton.SetActive(false);
         RealizeFocusButton.SetActive(false);
         ClosePanelButton.SetActive(false);
+        // Hide Item Details Panel
+        ItemDetailsPanel.SetActive(false);
 
         switch(alert)
         {
