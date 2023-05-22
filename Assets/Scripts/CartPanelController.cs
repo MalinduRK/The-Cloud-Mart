@@ -44,7 +44,7 @@ public class CartPanelController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return))
         {
             ButtonPressDebug("Return");
-            if (!isCartPanelOpen && !itemPanel.activeSelf && !pausePanel.activeSelf && !settingsPanel.activeSelf && !sessionAlertPanel)
+            if (!isCartPanelOpen && !itemPanel.activeSelf && !pausePanel.activeSelf && !settingsPanel.activeSelf && !sessionAlertPanel.activeSelf)
             {
                 OpenPanel();
             }
@@ -110,7 +110,7 @@ public class CartPanelController : MonoBehaviour
                 Debug.Log($"MultiModelLoader contains {itemId}");
                 name = MultiModelLoader.items[itemId].ItemName;
                 seller = MultiModelLoader.items[itemId].SellerName;
-                price = MultiModelLoader.items[itemId].ItemPrice.ToString();
+                price = (MultiModelLoader.items[itemId].ItemPrice*quantity).ToString();
                 imageExtension = MultiModelLoader.items[itemId].ImageFileExtension;
             }
 

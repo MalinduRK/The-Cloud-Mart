@@ -36,7 +36,7 @@ public class SessionOngoingController : MonoBehaviour
         minutes = ControlsController.minuteValue;
 
         //For testing:
-        hours = 0;
+        hours = 1;
         minutes = 0;
         seconds = 10;
 

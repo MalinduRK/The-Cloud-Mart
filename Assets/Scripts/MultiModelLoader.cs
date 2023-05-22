@@ -151,7 +151,7 @@ public class MultiModelLoader : MonoBehaviour
                 if (Mouse.current.leftButton.wasPressedThisFrame)
                 {
                     ButtonPressDebug("Left Mouse Button");
-                    if (!isItemPanelOpen && !cartPanel.activeSelf && !sessionAlertPanel)
+                    if (!isItemPanelOpen && !cartPanel.activeSelf && !sessionAlertPanel.activeSelf)
                     {
                         EnterPanel();
                         // Hide button prompt when the panel is open
