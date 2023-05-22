@@ -36,7 +36,7 @@ public class ControlsController : MonoBehaviour
         // Increment hour value by 1
         hourValue++;
         // Change hour text in the UI
-        hour.text = hourValue.ToString();
+        hour.text = hourValue.ToString("00");
     }
 
     public void HourDown()
@@ -52,7 +52,7 @@ public class ControlsController : MonoBehaviour
             hourValue--;
         }
         // Change hour text in the UI
-        hour.text = hourValue.ToString();
+        hour.text = hourValue.ToString("00");
     }
 
     public void MinuteUp()
@@ -68,7 +68,7 @@ public class ControlsController : MonoBehaviour
             minuteValue += 5;
         }
         // Change minute text in the UI
-        minute.text = minuteValue.ToString();
+        minute.text = minuteValue.ToString("00");
     }
 
     public void MinuteDown()
@@ -84,7 +84,7 @@ public class ControlsController : MonoBehaviour
             minuteValue -= 5;
         }
         // Change minute text in the UI
-        minute.text = minuteValue.ToString();
+        minute.text = minuteValue.ToString("00");
     }
 
     public void BudgetUp()
