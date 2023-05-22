@@ -16,6 +16,9 @@ public class SessionOngoingController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Hide Cursor on session start
+        GameState.HideCursor();
+
         // Assign user selected times to the local variables
         hours = ControlsController.hourValue;
         minutes = ControlsController.minuteValue;
@@ -27,7 +30,7 @@ public class SessionOngoingController : MonoBehaviour
 
         // .ToString("00") makes the numbers in 2-digit format
         time.text = $"Session Time: {hours.ToString("00")}:{minutes.ToString("00")}:00";
-        budget.text = $"Budget: ${ControlsController.budgetValue}";
+        budget.text = $"Budget: {ControlsController.budgetValue}";
         focus.text = $"Primary Focus: {ControlsController.focusValue}";
 
         // Start the coroutine to update seconds at regular intervals
