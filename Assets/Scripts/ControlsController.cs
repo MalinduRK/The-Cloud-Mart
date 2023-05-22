@@ -17,6 +17,15 @@ public class ControlsController : MonoBehaviour
     public static int budgetValue;
     public static string focusValue;
 
+    void Start()
+    {
+        // Assign initial values, if the user wants to continue with the default values
+        hourValue = int.Parse(hour.text);
+        minuteValue = int.Parse(minute.text);
+        budgetValue = int.Parse(budget.text);
+        focusValue = focus.options[focus.value].text;
+    }
+
     public void HourUp()
     {
         ButtonPressDebug("Hour Up");
