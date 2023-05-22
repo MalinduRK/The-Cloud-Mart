@@ -136,6 +136,11 @@ public class SessionOngoingController : MonoBehaviour
         GameState.PauseTime();
     }
 
+    public void ClosePanel()
+    {
+        SessionAlertPanel.SetActive(false);
+    }
+
     private void CustomDebug(string message)
     {
         if (customDebug)
