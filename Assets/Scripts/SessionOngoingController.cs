@@ -56,11 +56,11 @@ public class SessionOngoingController : MonoBehaviour
         budgetValue = ControlsController.budgetValue;
 
         //For testing:
-        hours = 0;
-        minutes = 0;
-        seconds = 10;
-        budgetValue = 500;
-        focusValue = "Bed";
+        //hours = 0;
+        //minutes = 0;
+        //seconds = 10;
+        //budgetValue = 500;
+        //focusValue = "Bed";
 
         // .ToString("00") makes the numbers in 2-digit format
         time.text = $"Session Time: {hours.ToString("00")}:{minutes.ToString("00")}:00";
@@ -145,6 +145,15 @@ public class SessionOngoingController : MonoBehaviour
         budget.text = $"Budget: ${budgetValue.ToString()}";
     }
 
+    public void ResetBudget()
+    {
+        // Reset the budget to its initial value
+        budgetValue = ControlsController.budgetValue;
+
+        // Update UI
+        budget.text = $"Budget: ${budgetValue.ToString()}";
+    }
+
     public void ExtendTime()
     {
         // Add 5 extra minutes
@@ -170,6 +179,7 @@ public class SessionOngoingController : MonoBehaviour
     {
         // Add $500 extra budget
         budgetValue += 500;
+        ControlsController.budgetValue += 500;
 
         // Update UI
         budget.text = $"Budget: ${budgetValue.ToString()}";
