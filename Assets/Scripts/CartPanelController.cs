@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using TMPro;
+using Unity.Services.Authentication;
+using Unity.Services.Core;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
@@ -52,6 +55,18 @@ public class CartPanelController : MonoBehaviour
             ReadCart();
         }
     }
+
+    async void Awake()
+	{
+		try
+		{
+			await UnityServices.InitializeAsync();
+		}
+		catch (Exception e)
+		{
+			Debug.LogException(e);
+		}
+	}
 
     public void OpenPanel()
     {
@@ -194,6 +209,8 @@ public class CartPanelController : MonoBehaviour
 
     public void PostToFirestore()
     {
+        // Debug.Log(AuthenticationService.Instance.PlayerId);
+
         // Create a new UnityWebRequest object
         UnityWebRequest www = new UnityWebRequest(databaseURL + "/" + collectionName + "/" + documentID, "POST");
 
@@ -205,6 +222,7 @@ public class CartPanelController : MonoBehaviour
 
         // Manually setting the json file
         jsonData = "{ \"fields\": {";
+        jsonData += $"\"userId\": {{ \"stringValue\": \"{AuthenticationService.Instance.PlayerId}\"}},";
         foreach (KeyValuePair<string, int> cartItem in cart)
         {
             jsonData += $"\"{cartItem.Key}\": {{ \"stringValue\": \"{cartItem.Value}\"}},";
