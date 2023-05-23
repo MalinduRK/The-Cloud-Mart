@@ -49,15 +49,24 @@ public class ItemDetailsPanelController : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, maxDistance))
         {
             string objectName = hit.collider.gameObject.name;
-            if (cart.ContainsKey(objectName))
+            // Reduce budget based on item price
+            if (MultiModelLoader.items.ContainsKey(objectName))
             {
-                cart[objectName] += 1; // increase the count by 1 if the item already exists in the cart
+                int price = (int)MultiModelLoader.items[objectName].ItemPrice;
+                // Change budget only if price does not exceed the remaining budget
+                if (ControlsController.budgetValue>=price)
+                {
+                    if (cart.ContainsKey(objectName))
+                    {
+                        cart[objectName] += 1; // increase the count by 1 if the item already exists in the cart
+                    }
+                    else
+                    {
+                        cart.Add(objectName, 1); // add the item to the cart with a count of 1 if it doesn't exist in the cart
+                    }
+                    CustomDebug($"{objectName} added to cart");
+                }
             }
-            else
-            {
-                cart.Add(objectName, 1); // add the item to the cart with a count of 1 if it doesn't exist in the cart
-            }
-            CustomDebug($"{objectName} added to cart");
         }
         cartText.text = $"In Cart: {cart.Count}";
     }

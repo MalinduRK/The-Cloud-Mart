@@ -16,6 +16,7 @@ public class SessionOngoingController : MonoBehaviour
 
     // Initialize budget variables
     private int budgetValue;
+    private int initialBudget;
 
     // Initialize focus variables
     private string focusValue;
@@ -54,6 +55,7 @@ public class SessionOngoingController : MonoBehaviour
         hours = ControlsController.hourValue;
         minutes = ControlsController.minuteValue;
         budgetValue = ControlsController.budgetValue;
+        initialBudget = budgetValue;
         focusValue = ControlsController.focusValue;
 
         //For testing:
@@ -134,6 +136,7 @@ public class SessionOngoingController : MonoBehaviour
                 if (budgetValue>=price)
                 {
                     budgetValue -= price;
+                    ControlsController.budgetValue = budgetValue;
                 }
                 else
                 {
@@ -149,7 +152,8 @@ public class SessionOngoingController : MonoBehaviour
     public void ResetBudget()
     {
         // Reset the budget to its initial value
-        budgetValue = ControlsController.budgetValue;
+        budgetValue = initialBudget;
+        ControlsController.budgetValue = budgetValue;
 
         // Update UI
         budget.text = $"Budget: ${budgetValue.ToString()}";
@@ -180,7 +184,8 @@ public class SessionOngoingController : MonoBehaviour
     {
         // Add $500 extra budget
         budgetValue += 500;
-        ControlsController.budgetValue += 500;
+        ControlsController.budgetValue = budgetValue;
+        initialBudget += 500;
 
         // Update UI
         budget.text = $"Budget: ${budgetValue.ToString()}";
