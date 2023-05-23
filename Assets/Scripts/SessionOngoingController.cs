@@ -54,6 +54,7 @@ public class SessionOngoingController : MonoBehaviour
         hours = ControlsController.hourValue;
         minutes = ControlsController.minuteValue;
         budgetValue = ControlsController.budgetValue;
+        focusValue = ControlsController.focusValue;
 
         //For testing:
         //hours = 0;
